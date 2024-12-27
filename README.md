@@ -117,6 +117,41 @@ export const store = configureStore({
 
 ---
 
+## ARRANCAR BACKEND
+### 🌳 Node
+Arrancamos el proyecto generando el `package.json` con el siguiente comando:
+```
+npm init -y
+```
+
+Instalamos `nodemon` de forma global:
+```
+sudo npm i nodemon -g
+```
+
+Una vez instalado `nodemon` añadimos los siguientes scripts a nuestro `package.json`
+```diff
+"scripts": {
+-   "test": "echo \"Error: no test specified\" && exit 1"
++   "dev": "nodemon index.js",
++   "start": "node index.js"
+},
+```
+
+Si queremos hacer un watch de `index.js`, arranca el server con `nodemon` (auto restart):
+```
+npm run dev
+```
+
+Arranca el server con node 
+```
+npm start
+```
+
+
+
+---
+
 # LINKS DE INTERÉS:  
 - [React: Documentación y recursos relacionados](https://es.reactjs.org/docs/getting-started.html)  
 - [React: Aprende React](https://es.react.dev/learn): Documentación de React. Introducción al 80% de los conceptos de React de uso diario
@@ -485,6 +520,39 @@ useEffect(() => {
 
 # 🏁 Sección 23: 📅 🛢️🚀⚛️🌳 CalendarApp - Backend - Node, Express, Mongo
 
+
+---
+## 📅 🌳 372. Inicio de proyecto - CalendarApp Node Backend
+
+### 🌳 Node
+Arrancamos el proyecto generando el `package.json` con el siguiente comando:
+```
+npm init -y
+```
+
+Instalamos `nodemon` de forma global:
+```
+sudo npm i nodemon -g
+```
+
+Una vez instalado `nodemon` añadimos los siguientes scripts a nuestro `package.json`
+```diff
+"scripts": {
+-   "test": "echo \"Error: no test specified\" && exit 1"
++   "dev": "nodemon index.js",
++   "start": "node index.js"
+},
+```
+
+Si queremos hacer un watch de `index.js`, arranca el server con `nodemon` (auto restart):
+```
+npm run dev
+```
+
+Arranca el server con node 
+```
+npm start
+```
 
 ---
 ## 📅 🛢️🚀⚛️🌳 370. Temas puntuales de la sección
