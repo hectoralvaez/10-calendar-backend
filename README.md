@@ -596,6 +596,31 @@ useEffect(() => {
 # 🏁 Sección 23: 📅 🛢️🚀⚛️🌳 CalendarApp - Backend - Node, Express, Mongo
 
 ---
+## ⭐⭐ 📅 🚀 376. Endpoints de remover, crear y login
+
+Definimos las rutas de los endpoints primero en el mismo `routes/auth.js` (v1)
+
+Pero para generar código más limpio, separamos las respuestas en la carpeta 'controllers', en el archivo `auth.js` (v2)
+
+De manera que en el `auth.js` de 'rutes' tenemos esta definición:
+
+```javascript
+router.post('/new', crearUsuario);
+```
+
+Y en el `auth.js` de 'controllers' la respuesta:
+
+```javascript
+const crearUsuario = (req, res = response) => {
+    res.json({
+        ok: true,
+        msg: 'registro'
+    });
+}
+```
+
+
+---
 ## 📅 🚀 375. Creando las rutas relacionadas a usuarios
 
 Definimos la primera ruta en `index.js`
