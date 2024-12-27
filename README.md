@@ -596,6 +596,37 @@ useEffect(() => {
 # 🏁 Sección 23: 📅 🛢️🚀⚛️🌳 CalendarApp - Backend - Node, Express, Mongo
 
 ---
+## 📅 🚀 375. Creando las rutas relacionadas a usuarios
+
+Definimos la primera ruta en `index.js`
+
+```javascript
+// Rutas
+app.use('/api/auth', require('./routes/auth') );
+```
+
+En la carpeta 'routes', creamos el archivo `auth.js`.
+
+El `Router` de 'express' nos permite gestionar las rutas. De momento hemos definido la raiz "/".
+
+```javascript
+const { Router } = require('express');
+const router = Router();
+
+router.get('/', (req, res) => {
+    res.json({
+        ok: true
+    });
+});
+
+module.exports = router;
+```
+
+Para tener acceso a este endpoint usaremos la siguiente url:
+```
+http://localhost:4000/api/auth
+```
+---
 ## 📅 🚀 374. Variables de entorno y carpeta pública
 
 Instalamos `dotenv` para poder gestionar las variables de entorno que tenemos en `.env`
