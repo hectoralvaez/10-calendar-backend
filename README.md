@@ -272,6 +272,14 @@ Este es un proyecto de código abierto. Consulte el repositorio oficial para obt
     - [Axios](https://axios-http.com) Fernando lo prefiere a Fetch
 
 
+- [HTTP Status Codes](https://www.restapitutorial.com/httpstatuscodes) Códigos de tres dígitos que los servidores web envían al navegador o cliente para informar sobre el resultado de una solicitud. Cada código tiene un significado específico y pertenece a una de las siguientes categorías:
+    - 1xx (Informativos)
+    - 2xx (Éxito)
+    - 3xx (Redirecciones)
+    - 4xx (Errores del Cliente) 
+    - 5xx (Errores del Servidor) 
+
+
 ## BEST PRACTICES
 ### SOLID
 Trabajar con los principios SOLID significa diseñar software de manera que sea fácil de entender, mantener y extender, separando responsabilidades, favoreciendo la reutilización y evitando dependencias innecesarias.
@@ -317,7 +325,7 @@ Este principio establece que los módulos de alto nivel no deben depender de mó
 > Es como cuando armas un robot con piezas de construcción. El cerebro del robot (la parte importante) le dice a las piezas cómo moverse, pero no necesita saber exactamente cómo es cada pieza. Si cambias las piezas por otras diferentes, el robot sigue funcionando bien porque el cerebro sigue dando las órdenes, y las piezas solo hacen lo que les toca.
 
 ## HERRAMIENTAS
-### [Firebase](https://console.firebase.google.com)
+### [Firebase](https://console.firebase.google.com)
 Plataforma de desarrollo de aplicaciones creada por Google que proporciona una variedad de herramientas y servicios diseñados para ayudar a los desarrolladores a construir, mejorar y escalar aplicaciones móviles y web de manera eficiente. Es particularmente popular debido a su integración con aplicaciones en tiempo real, su facilidad de uso y la variedad de productos que ofrece sin la necesidad de manejar servidores complejos.
 
 ---
@@ -594,6 +602,55 @@ useEffect(() => {
 <br />
 
 # 🏁 Sección 23: 📅 🛢️🚀⚛️🌳 CalendarApp - Backend - Node, Express, Mongo
+
+---
+## ⭐⭐⭐ 📅 🚀 377. Recuperar información de un posteo
+
+Añadimos a nuestro `index.js` el middleware `express.json` que nos va a permitir leer y parsear el body, es decir, lo que envía el usuario al endpoint.
+
+```javascript
+// Lectura y parseo del body
+app.use( express.json() );
+```
+
+En nuestro ejemplo, en Postman enviamos en el Body, como "raw" y en JSON la siguiente información:
+
+```javascript
+{
+    "name": "Héctor",
+    "email": "hector@gmail.com",
+    "password": "123456"
+}
+```
+
+Que desestructuramos de la siguiente manera:
+```javascript
+const { name, email, password } = req.body;
+```
+
+Para poderla llamar en la respuesta:
+
+```javascript
+res.json({
+    ok: true,
+    msg: 'registro',
+    name,
+    email,
+    password
+});
+```
+
+Además, empezamos a trabajar con las validaciones de los campos y los `status` que tiene que devolver el servidor según corresponda:
+[HTTP Status Codes](https://www.restapitutorial.com/httpstatuscodes)
+
+```javascript
+if (name.length < 5) {
+    return res.status(400).json({
+        ok: false,
+        msg: 'El nombre debe de ser de 5 letras'
+    });
+}
+```
 
 ---
 ## ⭐⭐ 📅 🚀 376. Endpoints de remover, crear y login
