@@ -151,6 +151,7 @@ npm start
 ---
 
 ### 🚀 Express
+#### Primeros pasos
 Instalamos localmente "Express":
 ```
 npm i express
@@ -188,6 +189,41 @@ app.listen( 4000, () => {
 > No usar el puerto 3000, ya que es el que usaremos en nuestra app de React, así nuestro Backend estará en un puerto distinto al de Front.
 
 A partir de ahora para ver el funcionamiento del server usaremos Postman, no el navegador web.
+
+#### Variables de entorno y carpeta pública
+
+Instalamos `dotenv` para poder gestionar las variables de entorno que tenemos en `.env`
+
+```
+npm i dotenv
+```
+
+Definimos en `.env` el puerto
+```
+PORT=4000
+```
+
+En index.js definimos las variables de entorno con esta línea:
+```
+require('dotenv').config();
+```
+Ya podemos llamar a las variables de entorno de la siguiente manera: `process.env.PORT`.
+
+Ejemplo:
+```javascript
+app.listen( process.env.PORT, () => {
+    console.log(`Servidor corriendo en puerto ${ process.env.PORT }`);
+});
+```
+
+Además, añadimos al index.js el directorio público, en nuestro caso, la carpeta "public", donde tenemos el index.html y una hoja de estilos:
+
+```javascript
+// Directorio público
+app.use( express.static('public') );
+```
+
+Ahora al abrir en el navegador web nuestro localhost con el puerto 4000, aparece el contenido de index.html.
 
 ---
 
@@ -558,6 +594,42 @@ useEffect(() => {
 <br />
 
 # 🏁 Sección 23: 📅 🛢️🚀⚛️🌳 CalendarApp - Backend - Node, Express, Mongo
+
+---
+## 📅 🚀 374. Variables de entorno y carpeta pública
+
+Instalamos `dotenv` para poder gestionar las variables de entorno que tenemos en `.env`
+
+```
+npm i dotenv
+```
+
+Definimos en `.env` el puerto
+```
+PORT=4000
+```
+
+En index.js definimos las variables de entorno con esta línea:
+```
+require('dotenv').config();
+```
+Ya podemos llamar a las variables de entorno de la siguiente manera: `process.env.PORT`.
+
+Ejemplo:
+```javascript
+app.listen( process.env.PORT, () => {
+    console.log(`Servidor corriendo en puerto ${ process.env.PORT }`);
+});
+```
+
+Además, añadimos al index.js el directorio público, en nuestro caso, la carpeta "public", donde tenemos el index.html y una hoja de estilos:
+
+```javascript
+// Directorio público
+app.use( express.static('public') );
+```
+
+Ahora al abrir en el navegador web nuestro localhost con el puerto 4000, aparece el contenido de index.html.
 
 
 ---
