@@ -148,7 +148,46 @@ Arranca el server con node
 npm start
 ```
 
+---
 
+### 🚀 Express
+Instalamos localmente "Express":
+```
+npm i express
+```
+
+En nuestro `package.json` se añaden las siguientes lineas:
+```diff
++ "dependencies": {
++   "express": "^4.21.2"
++ }
+```
+
+Hacemos la primera configuración de nuestro server en `index.js`
+
+```javascript
+const express = require('express');
+
+// Crear el servidor de express
+const app = express();
+
+// Rutas
+app.get('/', (req, res) => {
+    res.json({
+        ok: true
+    });
+});
+
+// Escuchar peticiones
+app.listen( 4000, () => {
+    console.log(`Servidor corriendo en puerto ${ 4000 }`);
+});
+```
+
+> IMPORTANTE:   
+> No usar el puerto 3000, ya que es el que usaremos en nuestra app de React, así nuestro Backend estará en un puerto distinto al de Front.
+
+A partir de ahora para ver el funcionamiento del server usaremos Postman, no el navegador web.
 
 ---
 
@@ -519,6 +558,49 @@ useEffect(() => {
 <br />
 
 # 🏁 Sección 23: 📅 🛢️🚀⚛️🌳 CalendarApp - Backend - Node, Express, Mongo
+
+
+---
+## 📅 🚀 373. Configurando Express
+
+### 🚀 Express
+Instalamos localmente "Express":
+```
+npm i express
+```
+
+En nuestro `package.json` se añaden las siguientes lineas:
+```diff
++ "dependencies": {
++   "express": "^4.21.2"
++ }
+```
+
+Hacemos la primera configuración de nuestro server en `index.js`
+
+```javascript
+const express = require('express');
+
+// Crear el servidor de express
+const app = express();
+
+// Rutas
+app.get('/', (req, res) => {
+    res.json({
+        ok: true
+    });
+});
+
+// Escuchar peticiones
+app.listen( 4000, () => {
+    console.log(`Servidor corriendo en puerto ${ 4000 }`);
+});
+```
+
+> IMPORTANTE:   
+> No usar el puerto 3000, ya que es el que usaremos en nuestra app de React, así nuestro Backend estará en un puerto distinto al de Front.
+
+A partir de ahora para ver el funcionamiento del server usaremos Postman, no el navegador web.
 
 
 ---
