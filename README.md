@@ -700,6 +700,41 @@ useEffect(() => {
 # 🏁 Sección 23: 📅 🛢️🚀⚛️🌳 CalendarApp - Backend - Node, Express, Mongo
 
 ---
+## ⭐⭐ 📅 🚀 378. Express Validator
+
+Empezamos instalando Express Validator
+
+```
+npm i express-validator
+```
+[express-validator](https://www.npmjs.com/package/express-validator)
+
+Iniciamos el manejo de errores en el 'controller':
+```javascript
+// manejo de errores
+const errors = validationResult( req );
+if( !errors.isEmpty() ){
+    // es importante retornar el error para que no se ejecute el resto del código, ya que si no retornará los dos status 201 y 400
+    return res.status(400).json({
+        ok: false,
+        errors: errors.mapped()
+    });
+}
+```
+
+En las rutas añadimos los middlewares
+```javascript
+router.post(
+    '/new',
+    [   // middlewares
+        check('name', 'El nombre es obligatorio').not().isEmpty(),
+        check('email', 'El email es obligatorio').isEmail(),
+        check('password', 'El password debe de ser de 6 caracteres').isLength({ min: 6 }),
+    ],
+    crearUsuario);
+```
+
+---
 ## ⭐⭐⭐ 📅 🚀 377. Recuperar información de un posteo
 
 Añadimos a nuestro `index.js` el middleware `express.json` que nos va a permitir leer y parsear el body, es decir, lo que envía el usuario al endpoint.
