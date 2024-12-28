@@ -541,6 +541,91 @@ Aquí el ejemplo concreto con [Vite.js](https://github.com/mui/material-ui/tree/
 ## GENERIC:
 - Las dev tools de Chrome solo funcionan en desarollo, cuando estamos en producción, no funcionan.
 
+## MIDDLEWARE
+
+Un middleware es una función que se ejecuta entre la solicitud (request) del cliente y la respuesta (response) que envía el servidor. Se utiliza en aplicaciones web para gestionar tareas como la autenticación, la validación de datos, el registro de actividades (logging), el manejo de errores, y más.
+
+### ¿Cómo funciona un middleware?
+En Node.js, particularmente con Express, un middleware tiene la forma de una función con los siguientes parámetros:
+
+```javascript
+function middleware(req, res, next) {
+  // Lógica del middleware
+  next(); // Llama al siguiente middleware o al manejador de la solicitud
+}
+```
+
+- `req`: Representa la solicitud del cliente (request).
+- `res`: Representa la respuesta que el servidor enviará (response).
+- `next`: Es una función que llama al siguiente middleware en la cadena. Si no se llama a `next()`, el flujo se detiene.
+
+### Tipos de middleware
+1. Middleware integrado de Express:
+    - Ya vienen incluidos en Express.
+    - Ejemplo: express.json() para procesar JSON en solicitudes.
+
+```javascript
+app.use(express.json());
+```
+
+2. Middleware de terceros:
+    - Instalados como paquetes externos.
+    - Ejemplo: morgan para registrar solicitudes HTTP.
+```javascript
+const morgan = require('morgan');
+app.use(morgan('tiny'));
+```
+
+3. Middleware definido por el usuario:
+    - Creado manualmente para tareas específicas.
+    - Ejemplo: Middleware para verificar si el usuario está autenticado.
+
+```javascript
+function isAuthenticated(req, res, next) {
+  if (req.user) {
+    next(); // Continúa si el usuario está autenticado
+  } else {
+    res.status(401).send('No autorizado');
+  }
+}
+app.use(isAuthenticated);
+```
+
+4. Middleware de manejo de errores:
+    - Tiene un cuarto parámetro err para manejar errores.
+```javascript
+function errorHandler(err, req, res, next) {
+  console.error(err.stack);
+  res.status(500).send('Algo salió mal');
+}
+app.use(errorHandler);
+```
+
+### Ejemplo práctico con Express:
+Supongamos que quieres registrar todas las solicitudes entrantes:
+
+```javascript
+const express = require('express');
+const app = express();
+
+// Middleware de registro
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.url}`);
+  next(); // Continúa al siguiente middleware o ruta
+});
+
+app.get('/', (req, res) => {
+  res.send('¡Hola, mundo!');
+});
+
+app.listen(3000, () => console.log('Servidor en http://localhost:3000'));
+```
+
+Aquí, el middleware registra cada solicitud antes de que llegue al manejador de la ruta.
+
+### En resumen:
+Un middleware actúa como un "intermediario" en el flujo de solicitudes y respuestas, procesando o modificando los datos en tránsito antes de que lleguen a su destino final.
+
 ## VISUAL STUDIO CODE:  
 - Para crear un Functional Component usamos el snippet`rafc`.
 
