@@ -123,11 +123,13 @@ Arrancamos el proyecto generando el `package.json` con el siguiente comando:
 ```
 npm init -y
 ```
+[npm-init](https://docs.npmjs.com/cli/v9/commands/npm-init)
 
 Instalamos `nodemon` de forma global:
 ```
 sudo npm i nodemon -g
 ```
+[nodemon](https://www.npmjs.com/package/nodemon)
 
 Una vez instalado `nodemon` añadimos los siguientes scripts a nuestro `package.json`
 ```diff
@@ -156,6 +158,7 @@ Instalamos localmente "Express":
 ```
 npm i express
 ```
+[express](https://www.npmjs.com/package/express)
 
 En nuestro `package.json` se añaden las siguientes lineas:
 ```diff
@@ -197,6 +200,7 @@ Instalamos `dotenv` para poder gestionar las variables de entorno que tenemos en
 ```
 npm i dotenv
 ```
+[dotenv](https://www.npmjs.com/package/dotenv)
 
 Definimos en `.env` el puerto
 ```
@@ -279,6 +283,13 @@ Este es un proyecto de código abierto. Consulte el repositorio oficial para obt
     - 4xx (Errores del Cliente) 
     - 5xx (Errores del Servidor) 
 
+
+- Paquetes de Node.js [Node Package Manager](https://docs.npmjs.com)
+    - [npm-init](https://docs.npmjs.com/cli/v9/commands/npm-init) Crea un archivo package.json para iniciar un proyecto Node.js y definir sus configuraciones básicas.
+    - [nodemon](https://www.npmjs.com/package/nodemon) Monitorea cambios en los archivos del proyecto y reinicia automáticamente el servidor durante el desarrollo.
+    - [express](https://www.npmjs.com/package/express) Framework de Node.js que facilita la creación de aplicaciones web y API rápidas y escalables.
+    - [dotenv](https://www.npmjs.com/package/dotenv) Permite cargar variables de entorno desde un archivo `.env` para mantener configuraciones seguras y organizadas.
+    - [express-validator](https://www.npmjs.com/package/express-validator) Middleware para validar y sanitizar datos en aplicaciones construidas con Express.
 
 ## BEST PRACTICES
 ### SOLID
@@ -716,6 +727,7 @@ Instalamos `dotenv` para poder gestionar las variables de entorno que tenemos en
 ```
 npm i dotenv
 ```
+[dotenv](https://www.npmjs.com/package/dotenv)
 
 Definimos en `.env` el puerto
 ```
@@ -753,6 +765,8 @@ Instalamos localmente "Express":
 ```
 npm i express
 ```
+
+[express](https://www.npmjs.com/package/express)
 
 En nuestro `package.json` se añaden las siguientes lineas:
 ```diff
@@ -797,10 +811,14 @@ Arrancamos el proyecto generando el `package.json` con el siguiente comando:
 npm init -y
 ```
 
+[npm-init](https://docs.npmjs.com/cli/v9/commands/npm-init)
+
 Instalamos `nodemon` de forma global:
 ```
 sudo npm i nodemon -g
 ```
+
+[nodemon](https://www.npmjs.com/package/nodemon)
 
 Una vez instalado `nodemon` añadimos los siguientes scripts a nuestro `package.json`
 ```diff
