@@ -698,6 +698,48 @@ useEffect(() => {
 <br />
 
 # 🏁 Sección 23: 📅 🛢️🚀⚛️🌳 CalendarApp - Backend - Node, Express, Mongo
+---
+## ⭐⭐⭐ 📅 🚀 379. Custom Middlewares
+
+En esta clase sacamos el manejo de errores del controlador y lo pasamos a nuestro propio middleware `validarCampos`, ya que siempre es el mismo código que repetíamos en cada acción.
+
+Middleware 'validar-campos.js'
+
+```javascript
+const { response } = require('express');
+const { validationResult } = require('express-validator');
+
+const validarCampos = (req, res = response, next) => {
+    // manejo de errores
+    const errors = validationResult( req );
+    if ( !errors.isEmpty() ) {
+        // es importante retornar el error para que no se ejecute el resto del código, ya que si no retornará los dos status 201 y 400
+        return res.status(400).json({
+            ok: false,
+            errors: errors.mapped()
+        });
+    }
+    next();
+}
+
+module.exports = {
+    validarCampos
+}
+```
+
+Una vez creado nuestro middleware, podemos llamarlo como un middleware más en la ruta:
+```diff
+router.post(
+    '/new',
+    [   // middlewares
+        check('name', 'El nombre es obligatorio').not().isEmpty(),
+        check('email', 'El email es obligatorio').isEmail(),
+        check('password', 'El password debe de ser de 6 caracteres').isLength({ min: 6 }),
++       validarCampos
+    ],
+    crearUsuario);
+```
+
 
 ---
 ## ⭐⭐ 📅 🚀 378. Express Validator
