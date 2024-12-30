@@ -718,6 +718,51 @@ useEffect(() => {
 
 
 ---
+## ⭐⭐ 📅 🚀 383. Validaciones del usuario
+
+Añadimos `findOne` para mirar si existe un registro con el email que pasamos al crear el usuario dentro de la bbdd.
+
+Si existe, devolvemos el error (`ok: false`) con estatus '400' y con el mensaje de 'Un usuario ya existe con ese correo'
+
+Si NO existe, asignamos a 'usuario' el `req.body` 
+`usuario = new Usuario( req.body );`
+y guardamos
+`await usuario.save();`
+
+```javascript
+
+const crearUsuario = async(req, res = response) => {
+...
+    try {
+
+        let usuario = await Usuario.findOne({ email }); 
+
+        if( usuario ) {
+            return res.status(400).json({
+                ok: false,
+                msg: 'Un usuario ya existe con ese correo'
+            });
+        }
+
+        usuario = new Usuario( req.body );
+
+        await usuario.save();
+        
+        res.status(201).json({
+            ok: true,
+            uid: usuario.id,
+            name: usuario.name,
+        });
+
+    } catch (error) {
+...
+    }
+
+}
+```
+
+
+---
 ## ⭐⭐ 📅 🚀 382. Crear un usuario en nuestra Base de Datos
 
 Creamos nuestro primer "modelo" "Usuario" siguiendo la idea que aporta mongoose:
