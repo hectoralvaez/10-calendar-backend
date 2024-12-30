@@ -718,6 +718,91 @@ useEffect(() => {
 
 
 ---
+## ⭐⭐ 📅 🚀 382. Crear un usuario en nuestra Base de Datos
+
+Creamos nuestro primer "modelo" "Usuario" siguiendo la idea que aporta mongoose:
+
+```javascript
+const Cat = mongoose.model('Cat', { name: String });
+```
+Que luego nos permitirá crear y guardar registros de ese modelo:
+```javascript
+const kitty = new Cat({ name: 'Zildjian' });
+kitty.save().then(() => console.log('meow'));
+```
+
+Como es una clase, tiene que ir en mayúscula `Usuario.js`.
+
+Usuario.js:
+```javascript
+const { Schema, model } = require('mongoose');
+
+const UsuarioSchema = Schema({
+    name: {
+        type: String,
+        required: true,
+    },
+    email: {
+        type: String,
+        required: true,
+        unique: true
+    },
+    password: {
+        type: String,
+        required: true,
+    }
+});
+
+module.exports = model('Usuario', UsuarioSchema);
+```
+
+En el controller, añadimos el modelo:
+```javascript
+const Usuario = require('../models/Usuario');
+```
+
+Y en la función `crearUsuario` creamos el usuario con la información obtenida `req.body` implementándola dentro de nuestro modelo Usuario:
+
+```javascript
+const usuario = new Usuario( req.body );
+```
+Y guardamos esta información:
+```javascript
+await usuario.save();
+```
+
+Ahora `crearUsuario` tiene que ser `async` para esperar a que se guarde el 'usuario'.
+
+Así queda la función `crearUsuario`:
+
+```javascript
+const crearUsuario = async(req, res = response) => {
+
+    // const { name, email, password } = req.body;
+
+    try {
+        const usuario = new Usuario( req.body );
+
+        await usuario.save();
+        
+        res.status(201).json({
+            ok: true,
+            msg: 'registro',
+        });
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            ok: false,
+            msg: 'Por favor hable con el administrador'
+        });
+    }
+
+}
+```
+
+
+---
 ## ⭐⭐ 📅 🚀 381. Conectar Node a Mongo Atlas
 
 Instalamos Mongoose:
