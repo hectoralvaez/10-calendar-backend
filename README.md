@@ -721,6 +721,66 @@ useEffect(() => {
 
 
 ---
+## ⭐ 📅 🛢️ 385. Login de usuario
+
+Ahora en el controller tenemos que actualizar la función `loginUsuario` y desencriptar la contraseña para confirmar que es correcta:
+
+```javascript
+const validPassword = bcrypt.compareSync( password, usuario.password );
+```
+Aquí la función completa de `loginUsuario` con el control de estados para:
+- (400) Si no existe el email
+- (400) Si el password es incorrecto
+- (200) Cuando todo está ok
+- (500) Si hay problemas con el servidor
+
+```javascript
+const loginUsuario = async(req, res = response) => {
+    
+    const { email, password } = req.body;
+
+    try {
+        const usuario = await Usuario.findOne({ email }); 
+
+        if( !usuario ) {
+            return res.status(400).json({
+                ok: false,
+                msg: 'El usuario no existe con ese email'
+            });
+        }
+
+        // Confirmar los passwords
+        const validPassword = bcrypt.compareSync( password, usuario.password );
+
+        if( !validPassword ) {
+            return res.status(400).json({
+                ok: false,
+                msg: 'Password incorrecto'
+            });
+        }
+
+        // TODO: Generar nuestro JWT (Json Web Token)
+
+        res.json({
+            ok: true,
+            uid: usuario.id,
+            name: usuario.name,
+        });
+
+        
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            ok: false,
+            msg: 'Por favor hable con el administrador'
+        });
+        
+    }
+}
+```
+
+
+---
 ## ⭐ 📅 🛢️ 384. Encriptar la contraseña
 
 Instalamos bcryptjs
