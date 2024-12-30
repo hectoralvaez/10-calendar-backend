@@ -306,6 +306,7 @@ Este es un proyecto de código abierto. Consulte el repositorio oficial para obt
 - [express](https://www.npmjs.com/package/express) Framework de Node.js que facilita la creación de aplicaciones web y API rápidas y escalables.
 - [dotenv](https://www.npmjs.com/package/dotenv) Permite cargar variables de entorno desde un archivo `.env` para mantener configuraciones seguras y organizadas.
 - [express-validator](https://www.npmjs.com/package/express-validator) Middleware para validar y sanitizar datos en aplicaciones construidas con Express.
+- [Mongoosejs](https://mongoosejs.com/) Proporciona una capa de abstracción para interactuar con MongoDB. Permite definir esquemas y modelos para estructurar y validar los datos de manera más sencilla. Además incluye funcionalidades avanzadas como middleware, validaciones y consultas más intuitivas.
 
 ## BEST PRACTICES
 ### SOLID
@@ -717,6 +718,112 @@ useEffect(() => {
 
 
 ---
+## ⭐⭐ 📅 🚀 381. Conectar Node a Mongo Atlas
+
+Instalamos Mongoose:
+```
+npm i mongoose
+```
+
+Añadimos a nuestro .env el link de conexión a la BBDD:
+```diff
+PORT=4000
++DB_CNN=mongodb+srv://[USUARIO]:[PASSWORD]@hectoralvaez.sgta2.mongodb.net/[NOMBRE_BBDD]
+```
+> **¡Importante!** Añadir al final del link de conexión el nombre de la nueva BBDD `[NOMBRE_BBDD]`
+
+Creamos nuestro archivo de configuración en la carpeta 'database':
+```javascript
+const mongoose = require('mongoose');
+
+const dbConnection = async() => {
+    try {
+        await mongoose.connect( process.env.DB_CNN);
+        console.log('DB Online');
+
+    } catch (error) {
+        console.log(error);
+        throw new Error('Error a la hora de iniciar la BD');
+    }
+}
+
+module.exports = {
+    dbConnection
+}
+```
+
+---
+### UPDATE AL CURSO:
+
+> **⚠️ ¡Importante!**   
+> En el curso se añaden las siguientes variables en la conexión a Mongoose `useNewUrlParser`, `useUnifiedTopology` y `useCreateIndex`
+
+```javascript
+await mongoose.connect( process.env.DB_CNN, {
+    useNewUrlParser: true, 
+    useUnifiedTopology: true,
+    useCreateIndex: true
+});
+```
+
+Con esta configuración, la conexión lanza el siguiente error:
+`MongoParseError: option usecreateindex is not supported`
+y no se realiza la conexión a la BBDD.
+
+El error se debe a que la opción `useCreateIndex` ya no es compatible con las versiones más recientes de Mongoose.
+
+Además lanza los siguientes warnings:
+
+```
+(node:95164) [MONGODB DRIVER] Warning: useNewUrlParser is a deprecated option: useNewUrlParser has no effect since Node.js Driver version 4.0.0 and will be removed in the next major version (Use node --trace-warnings ... to show where the warning was created)
+
+(node:95164) [MONGODB DRIVER] Warning: useUnifiedTopology is a deprecated option: useUnifiedTopology has no effect since Node.js Driver version 4.0.0 and will be removed in the next major version
+```
+
+Las opciones `useNewUrlParser` y `useUnifiedTopology` también están obsoletas en las versiones más recientes del controlador de MongoDB.
+
+Con lo cual, la conexión queda limpia de variables extras:
+
+```javascript
+await mongoose.connect( process.env.DB_CNN);
+```
+---
+
+Hacemos la conexión en index.js
+
+```diff
+const express = require('express');
+require('dotenv').config();
++const { dbConnection } = require('./database/config');
+
+// Crear el servidor de express
+const app = express();
+
++// Base de datos
++dbConnection();
+
+// Directorio público
+app.use( express.static('public') );
+
+// Lectura y parseo del body
+app.use( express.json() );
+
+// Rutas
+app.use('/api/auth', require('./routes/auth') );
+
+// TODO: CRUD: Eventos // get, create, update, delete
+
+// Escuchar peticiones
+app.listen( process.env.PORT, () => {
+    console.log(`Servidor corriendo en puerto ${ process.env.PORT }`);
+});
+```
+
+
+
+
+
+---
 ## ⭐⭐⭐⭐ 📅 🚀 380. Configuración de base de datos
 - [MongoDB](https://www.mongodb.com/es): Base de datos NoSQL orientada a documentos. En lugar de almacenar datos en tablas y filas como las bases de datos relacionales, MongoDB organiza la información en documentos JSON (o BSON) flexibles, lo que la hace ideal para manejar datos no estructurados o semiestructurados. Es muy escalable y se utiliza comúnmente para aplicaciones web modernas debido a su velocidad y capacidad para manejar grandes volúmenes de datos.
 - [MongoDB - Servicio de base de datos totalmente gestionada](https://www.mongodb.com/es/cloud/atlas/efficiency)
@@ -728,12 +835,6 @@ También pasamos esa conexión a [MongoDB Compass](https://www.mongodb.com/produ
 
 
 [MongoDB Compass](https://www.mongodb.com/products/tools/compass) es una interfaz gráfica oficial para MongoDB que permite visualizar, explorar y gestionar bases de datos de forma intuitiva. Con Compass, puedes realizar consultas, analizar esquemas, validar datos y optimizar el rendimiento sin necesidad de usar comandos en la línea de terminal. Es ideal para desarrolladores que prefieren herramientas visuales para trabajar con MongoDB.
-
-
-
-
-
-
 
 
 ---
