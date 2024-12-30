@@ -47,7 +47,7 @@ Netlify: https://festivaldegifs.netlify.app
 GitHub: https://github.com/hectoralvaez/festival-de-gifs  
 GitHub Pages: https://hectoralvaez.github.io/festival-de-gifs/  
 
-React, Vite, GitHub, Jest, React Testing Library, Netlify, GitHub Pages, Postman, Firebase
+React, Vite, GitHub, Jest, React Testing Library, Netlify, GitHub Pages, Postman, Firebase, MongoDB, Mongoosejs
 
 ---
 
@@ -232,31 +232,36 @@ Ahora al abrir en el navegador web nuestro localhost con el puerto 4000, aparece
 ---
 
 # LINKS DE INTERÉS:  
+## REACT
 - [React: Documentación y recursos relacionados](https://es.reactjs.org/docs/getting-started.html)  
 - [React: Aprende React](https://es.react.dev/learn): Documentación de React. Introducción al 80% de los conceptos de React de uso diario
 - [React: Presentando Hooks](https://es.reactjs.org/docs/hooks-intro.html#motivation): Los _Hooks_ son una nueva incorporación en React 16.8. Te permiten usar estado y otras características de React sin escribir una clase.
 - [React: Referencia de la API de los Hooks](https://es.reactjs.org/docs/hooks-reference.html)
 - [React: Hooks "Motivación"](https://es.reactjs.org/docs/hooks-intro.html#motivation)
 
-- [GitHub](https://github.com/): Plataforma de alojamiento de código para el control de versiones y la colaboración.
-- [Netlify](https://www.netlify.com/): Desplegar desplegar aplicaciones sin BackEnd.
+## TESTS
 - [Jest](https://jestjs.io/): Para hacer tests en Babel, TypeScript, Node, React, Angular, Vue y más. (combinada con [React Testing Library](https://testing-library.com/docs/))
 - [React Testing Library (RTL)](https://testing-library.com/docs/react-testing-library/intro/): Librería para hacer tests en React (combinada con [Jest](https://jestjs.io/)).  
 En las instalaciones CRA ya viene instalada, con Vite hay que hacer la instalación a parte.  
 En terminal: `yarn add --dev @testing-library/react @types/jest jest-environment-jsdom`
+
+## VITE
 - [Vite](https://vitejs.dev/): La alternativa a [Create React App (CRA)](https://create-react-app.dev/), es más ligero
 - [Use Vite for React Apps instead of CRA](https://dev.to/nilanth/use-vite-for-react-apps-instead-of-cra-3pkg)
+
+
+## LIBRERÍAS
 - [React Hook Form](https://react-hook-form.com/): Librería que te ayuda a validar formularios en React. Es una librería mínima sin otras dependencias, a la vez que es eficiente y fácil de usar, lo que requiere que los desarrolladores escriban menos líneas de código que otras librerías de formularios.
 - [React Router](https://reactrouter.com): Biblioteca de enrutamiento con la que puedes definir diferentes rutas dentro de tu aplicación y asignar componentes específicos a cada ruta. Cuando el usuario navega a una ruta determinada, React Router se encarga de renderizar el componente correspondiente en el lugar adecuado de la interfaz de usuario. Es esencial para construir aplicaciones de una sola página (SPA) con múltiples rutas y vistas en React, ya que facilita el enrutamiento y la navegación entre componentes de manera eficiente y estructurada.
-
 - [React Router (useNavigate)](https://reactrouter.com/en/main/hooks/use-navigate): Este hook nos devuelve la función 'navigate', que nos permite hacer redirecciones programáticas. Con esta función, podemos hacer lo mismo que con el componente navigate. Es decir, redirigir una URL al resultado de otra ruta.
 
   La diferencia entre el hook useNavigate y el componente navigate en React Router es que, con el uso del hook, podemos utilizar una función. Esto implica que podemos utilizarlo en cualquier parte del código. El problema de utilizar componentes en vez de funciones es que debemos renderizarlos. Ya que una función no necesita este proceso de render, podemos insertarla donde queramos.
-
 - [Material UI components](https://mui.com/material-ui/all-components/)
 
     Material UI tiene como objetivo proporcionar elementos básicos para que los desarrolladores creen excelentes interfaces de usuario utilizando las pautas de Material Design como referencia.
 
+
+## REDUX
 - [Redux](https://redux.js.org): Biblioteca para el manejo del estado con un almacenamiento centralizado.
 - [React Redux](https://react-redux.js.org): Conector oficial entre Redux y React.
 - [Redux Toolkit (RTK)](https://redux-toolkit.js.org): Conjunto de herramientas para simplificar el uso de Redux.
@@ -270,12 +275,23 @@ La extensión proporciona potenciadores para su flujo de trabajo de desarrollo d
 
 Este es un proyecto de código abierto. Consulte el repositorio oficial para obtener más detalles: https://github.com/reduxjs/redux-devtools.
 
+## PLATAFORMAS
+- [GitHub](https://github.com/): Plataforma de alojamiento de código para el control de versiones y la colaboración.
+- [Netlify](https://www.netlify.com/): Desplegar desplegar aplicaciones sin BackEnd.
 
-- PETICIONES HTTP 
-    - [Fetch](https://developer.mozilla.org/es/docs/Web/API/Fetch_API/Using_Fetch) Viene en JavaScript
-    - [Axios](https://axios-http.com) Fernando lo prefiere a Fetch
+## BBDD
+- [MongoDB](https://www.mongodb.com/es): Base de datos NoSQL orientada a documentos. En lugar de almacenar datos en tablas y filas como las bases de datos relacionales, MongoDB organiza la información en documentos JSON (o BSON) flexibles, lo que la hace ideal para manejar datos no estructurados o semiestructurados. Es muy escalable y se utiliza comúnmente para aplicaciones web modernas debido a su velocidad y capacidad para manejar grandes volúmenes de datos.
+- [MongoDB - Servicio de base de datos totalmente gestionada](https://www.mongodb.com/es/cloud/atlas/efficiency)
 
+[MongoDB Compass](https://www.mongodb.com/products/tools/compass) es una interfaz gráfica oficial para MongoDB que permite visualizar, explorar y gestionar bases de datos de forma intuitiva. Con Compass, puedes realizar consultas, analizar esquemas, validar datos y optimizar el rendimiento sin necesidad de usar comandos en la línea de terminal. Es ideal para desarrolladores que prefieren herramientas visuales para trabajar con MongoDB.
 
+- [Mongoosejs](https://mongoosejs.com/) Biblioteca de Node.js que proporciona una capa de abstracción para interactuar con MongoDB. Permite definir esquemas y modelos para estructurar y validar los datos de manera más sencilla, ofreciendo una forma más organizada y amigable de trabajar con MongoDB en aplicaciones JavaScript. Además, Mongoose incluye funcionalidades avanzadas como middleware, validaciones y consultas más intuitivas.
+
+## PETICIONES HTTP 
+- [Fetch](https://developer.mozilla.org/es/docs/Web/API/Fetch_API/Using_Fetch) Viene en JavaScript
+- [Axios](https://axios-http.com) Fernando lo prefiere a Fetch
+
+## HTTP STATUS CODES
 - [HTTP Status Codes](https://www.restapitutorial.com/httpstatuscodes) Códigos de tres dígitos que los servidores web envían al navegador o cliente para informar sobre el resultado de una solicitud. Cada código tiene un significado específico y pertenece a una de las siguientes categorías:
     - 1xx (Informativos)
     - 2xx (Éxito)
@@ -283,13 +299,13 @@ Este es un proyecto de código abierto. Consulte el repositorio oficial para obt
     - 4xx (Errores del Cliente) 
     - 5xx (Errores del Servidor) 
 
-
-- Paquetes de Node.js [Node Package Manager](https://docs.npmjs.com)
-    - [npm-init](https://docs.npmjs.com/cli/v9/commands/npm-init) Crea un archivo package.json para iniciar un proyecto Node.js y definir sus configuraciones básicas.
-    - [nodemon](https://www.npmjs.com/package/nodemon) Monitorea cambios en los archivos del proyecto y reinicia automáticamente el servidor durante el desarrollo.
-    - [express](https://www.npmjs.com/package/express) Framework de Node.js que facilita la creación de aplicaciones web y API rápidas y escalables.
-    - [dotenv](https://www.npmjs.com/package/dotenv) Permite cargar variables de entorno desde un archivo `.env` para mantener configuraciones seguras y organizadas.
-    - [express-validator](https://www.npmjs.com/package/express-validator) Middleware para validar y sanitizar datos en aplicaciones construidas con Express.
+## PAQUETES DE NODE.JS
+[Node Package Manager](https://docs.npmjs.com)
+- [npm-init](https://docs.npmjs.com/cli/v9/commands/npm-init) Crea un archivo package.json para iniciar un proyecto Node.js y definir sus configuraciones básicas.
+- [nodemon](https://www.npmjs.com/package/nodemon) Monitorea cambios en los archivos del proyecto y reinicia automáticamente el servidor durante el desarrollo.
+- [express](https://www.npmjs.com/package/express) Framework de Node.js que facilita la creación de aplicaciones web y API rápidas y escalables.
+- [dotenv](https://www.npmjs.com/package/dotenv) Permite cargar variables de entorno desde un archivo `.env` para mantener configuraciones seguras y organizadas.
+- [express-validator](https://www.npmjs.com/package/express-validator) Middleware para validar y sanitizar datos en aplicaciones construidas con Express.
 
 ## BEST PRACTICES
 ### SOLID
@@ -698,6 +714,28 @@ useEffect(() => {
 <br />
 
 # 🏁 Sección 23: 📅 🛢️🚀⚛️🌳 CalendarApp - Backend - Node, Express, Mongo
+
+
+---
+## ⭐⭐⭐⭐ 📅 🚀 380. Configuración de base de datos
+- [MongoDB](https://www.mongodb.com/es): Base de datos NoSQL orientada a documentos. En lugar de almacenar datos en tablas y filas como las bases de datos relacionales, MongoDB organiza la información en documentos JSON (o BSON) flexibles, lo que la hace ideal para manejar datos no estructurados o semiestructurados. Es muy escalable y se utiliza comúnmente para aplicaciones web modernas debido a su velocidad y capacidad para manejar grandes volúmenes de datos.
+- [MongoDB - Servicio de base de datos totalmente gestionada](https://www.mongodb.com/es/cloud/atlas/efficiency)
+- [Mongoosejs](https://mongoosejs.com/) Biblioteca de Node.js que proporciona una capa de abstracción para interactuar con MongoDB. Permite definir esquemas y modelos para estructurar y validar los datos de manera más sencilla, ofreciendo una forma más organizada y amigable de trabajar con MongoDB en aplicaciones JavaScript. Además, Mongoose incluye funcionalidades avanzadas como middleware, validaciones y consultas más intuitivas.
+
+En esta clase creamos una nueva conexión a nuestra bbdd (Cluster) en [MongoDB Atlas](https://cloud.mongodb.com) con un nuevo usuario y contraseña que tendrá acceso a esa conexión con permisos `readWriteAnyDatabase@admin`.
+
+También pasamos esa conexión a [MongoDB Compass](https://www.mongodb.com/products/tools/compass).
+
+
+[MongoDB Compass](https://www.mongodb.com/products/tools/compass) es una interfaz gráfica oficial para MongoDB que permite visualizar, explorar y gestionar bases de datos de forma intuitiva. Con Compass, puedes realizar consultas, analizar esquemas, validar datos y optimizar el rendimiento sin necesidad de usar comandos en la línea de terminal. Es ideal para desarrolladores que prefieren herramientas visuales para trabajar con MongoDB.
+
+
+
+
+
+
+
+
 ---
 ## ⭐⭐⭐ 📅 🚀 379. Custom Middlewares
 
