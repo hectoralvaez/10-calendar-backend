@@ -308,6 +308,9 @@ Este es un proyecto de código abierto. Consulte el repositorio oficial para obt
 - [express-validator](https://www.npmjs.com/package/express-validator) Middleware para validar y sanitizar datos en aplicaciones construidas con Express.
 - [Mongoosejs](https://mongoosejs.com/) Proporciona una capa de abstracción para interactuar con MongoDB. Permite definir esquemas y modelos para estructurar y validar los datos de manera más sencilla. Además incluye funcionalidades avanzadas como middleware, validaciones y consultas más intuitivas.
 
+- [bcryptjs](https://www.npmjs.com/package/bcryptjs) es una biblioteca de JavaScript que permite cifrar contraseñas de forma segura utilizando el algoritmo bcrypt, proporcionando funciones para crear hashes de contraseñas y verificar si un texto coincide con un hash almacenado.
+
+
 ## BEST PRACTICES
 ### SOLID
 Trabajar con los principios SOLID significa diseñar software de manera que sea fácil de entender, mantener y extender, separando responsabilidades, favoreciendo la reutilización y evitando dependencias innecesarias.
@@ -718,7 +721,28 @@ useEffect(() => {
 
 
 ---
-## ⭐⭐ 📅 🚀 383. Validaciones del usuario
+## ⭐ 📅 🛢️ 384. Encriptar la contraseña
+
+Instalamos bcryptjs
+```
+npm install bcryptjs
+```
+- [bcryptjs](https://www.npmjs.com/package/bcryptjs) es una biblioteca de JavaScript que permite cifrar contraseñas de forma segura utilizando el algoritmo bcrypt, proporcionando funciones para crear hashes de contraseñas y verificar si un texto coincide con un hash almacenado.
+
+En el controller, una vez tenemos la información del 'usuario', encriptamos la contraseña con bcrypt antes de salvar los datos en la BBDD:
+```diff
+usuario = new Usuario( req.body );
+
++// Encriptar contraseña
++const salt = bcrypt.genSaltSync();
++usuario.password = bcrypt.hashSync( password, salt );
+
+await usuario.save();
+```
+
+
+---
+## ⭐⭐ 📅 🛢️ 383. Validaciones del usuario
 
 Añadimos `findOne` para mirar si existe un registro con el email que pasamos al crear el usuario dentro de la bbdd.
 
@@ -763,7 +787,7 @@ const crearUsuario = async(req, res = response) => {
 
 
 ---
-## ⭐⭐ 📅 🚀 382. Crear un usuario en nuestra Base de Datos
+## ⭐⭐ 📅 🛢️ 382. Crear un usuario en nuestra Base de Datos
 
 Creamos nuestro primer "modelo" "Usuario" siguiendo la idea que aporta mongoose:
 
@@ -848,7 +872,7 @@ const crearUsuario = async(req, res = response) => {
 
 
 ---
-## ⭐⭐ 📅 🚀 381. Conectar Node a Mongo Atlas
+## ⭐⭐ 📅 🛢️ 381. Conectar Node a Mongo Atlas
 
 Instalamos Mongoose:
 ```
@@ -954,7 +978,7 @@ app.listen( process.env.PORT, () => {
 
 
 ---
-## ⭐⭐⭐⭐ 📅 🚀 380. Configuración de base de datos
+## ⭐⭐⭐⭐ 📅 🛢️ 380. Configuración de base de datos
 - [MongoDB](https://www.mongodb.com/es): Base de datos NoSQL orientada a documentos. En lugar de almacenar datos en tablas y filas como las bases de datos relacionales, MongoDB organiza la información en documentos JSON (o BSON) flexibles, lo que la hace ideal para manejar datos no estructurados o semiestructurados. Es muy escalable y se utiliza comúnmente para aplicaciones web modernas debido a su velocidad y capacidad para manejar grandes volúmenes de datos.
 - [MongoDB - Servicio de base de datos totalmente gestionada](https://www.mongodb.com/es/cloud/atlas/efficiency)
 - [Mongoosejs](https://mongoosejs.com/) Biblioteca de Node.js que proporciona una capa de abstracción para interactuar con MongoDB. Permite definir esquemas y modelos para estructurar y validar los datos de manera más sencilla, ofreciendo una forma más organizada y amigable de trabajar con MongoDB en aplicaciones JavaScript. Además, Mongoose incluye funcionalidades avanzadas como middleware, validaciones y consultas más intuitivas.
