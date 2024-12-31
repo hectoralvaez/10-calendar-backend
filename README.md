@@ -808,6 +808,103 @@ useEffect(() => {
 
 
 ---
+## ⭐ 📅 🛢️ 386. 387. Revalidar JWT
+
+Los tokens no se pasan por el "Body", como hemos estado haciendo hasta ahora pasando la información del usuario en Postman, que en el Body añadíamos el JSON con la información necesaria:
+```json
+{
+    "email": "hector@gmail3.com",
+    "password": "123456"
+}
+```
+
+Los tokens se pasan a través del header y el nombre de la variable, es un estandard, que si es un header personalizado, la variable tiene que empezar por "x-..."
+
+En nuestro ejemplo para pasar el token por el header, le pondremos `x-token`.
+
+Solo se dará por válido ese token si llega por el header a través de la variable `x-token`.
+
+
+
+Generamos nuestro middleware para validar el token:
+
+```javascript
+const { response } = require('express');
+const jwt = require('jsonwebtoken');
+
+const validarJWT = (req, res = response, next) => {
+    // x-token headers 
+    const token = req.header('x-token');
+
+    console.log(token);
+
+    if( !token ) {
+        return res.status(401).json({
+            ok: false,
+            msg: 'No hay token en la petición'
+        });
+    }
+
+    try {
+
+        const { uid, name } = jwt.verify(
+            token,
+            process.env.SECRET_JWT_SEED
+        );
+
+        req.uid = uid;
+        req.name = name;
+
+    } catch (error) {
+        return res.status(401).json({
+            ok: false,
+            msg: 'Token no válido'
+        });
+    }
+
+    next();
+
+}
+
+module.exports = {
+    validarJWT
+}
+```
+
+
+En la ruta de "Revalidar token", añadimos el middleware:
+
+```diff
+-router.get('/renew', revalidarToken);
++router.get('/renew', validarJWT, revalidarToken);
+```
+
+> Como solo hay un middlweare en esta ruta, se puede llamar directamente, no hace falta que sea una array
+
+
+En el controller, acabamos de implementar la función `revalidarToken`
+
+
+```diff
+-const revalidarToken = (req, res = response) => {
++const revalidarToken = async(req, res = response) => {
+
++   const { uid, name } = req;
+
++   // Generar nuestro JWT
++   const token = await generarJWT( uid, name );
+
+    res.json({
+        ok: true,
++       uid,
++       name,
++       token,
+        msg: 'renew'
+    });
+}
+```
+
+---
 ## ⭐ 📅 🛢️ 386. Generar un Json Web Token
 [jwt](https://jwt.io/): Herramienta en línea para decodificar, verificar y generar JSON Web Tokens (JWT), utilizados para autenticar y transmitir información de manera segura en aplicaciones web.
 
