@@ -806,6 +806,12 @@ useEffect(() => {
 
 <br />
 
+# 🏁 Sección 24: 📅 🛢️🚀⚛️🌳 + ✏️📖♻️🗑️ Backend - Eventos del calendario - CRUD
+
+
+
+# 🆕 Sección 24: 📅 🛢️🚀⚛️🌳 + ✏️📖♻️🗑️ Backend - Eventos del calendario - CRUD
+
 # 🏁 Sección 23: 📅 🛢️🚀⚛️🌳 CalendarApp - Backend - Node, Express, Mongo
 ---
 ## 📅 🛢️ 388. Configurar CORS
