@@ -299,6 +299,93 @@ Este es un proyecto de código abierto. Consulte el repositorio oficial para obt
     - 4xx (Errores del Cliente) 
     - 5xx (Errores del Servidor) 
 
+## SEGURIDAD
+### JSON Web Tokens (JWT)
+- [jwt](https://jwt.io/): Herramienta en línea para decodificar, verificar y generar JSON Web Tokens (JWT), utilizados para autenticar y transmitir información de manera segura en aplicaciones web.
+
+#### ¿Cómo funciona un JWT?
+1. Autenticación inicial:
+- El cliente (por ejemplo, una aplicación frontend) se autentica enviando credenciales al servidor (como usuario y contraseña).
+- Si las credenciales son válidas, el servidor genera un JWT.
+
+2. Token generado:
+- Este JWT se envía al cliente y se almacena (por ejemplo, en localStorage o una cookie).
+
+3. Autenticación subsiguiente:
+- Para cada solicitud posterior, el cliente envía el JWT en el encabezado de autorización (por ejemplo, `Authorization: Bearer <token>`).
+- El servidor verifica el JWT sin necesidad de consultar la base de datos, ya que el token contiene toda la información requerida.
+
+4. Autenticidad:
+- El servidor verifica la firma del JWT con una clave secreta o pública (dependiendo del algoritmo) para asegurarse de que el token no ha sido modificado.
+
+#### Estructura del JWT
+Un JWT consta de tres partes separadas por puntos (.):
+
+1. Header (Encabezado):
+- Describe el tipo de token y el algoritmo de encriptación utilizado.
+- Ejemplo:
+```json
+{
+  "alg": "HS256",
+  "typ": "JWT"
+}
+```
+
+2. Payload (Carga útil):
+- Contiene los datos o claims (reclamos) del usuario, como:
+    - Datos públicos: `sub` (ID del usuario), `name`, `email`.
+    - Datos privados o sensibles (con moderación).
+- Ejemplo:
+```json
+{
+  "sub": "1234567890",
+  "name": "John Doe",
+  "admin": true
+}
+```
+> ⚠️ Importante: Esta información está codificada, pero no cifrada, por lo que puede ser leída si se decodifica el token.
+
+3. Signature (Firma):
+- Garantiza la integridad del token y autentica su origen.
+- Se genera combinando:
+    - El encabezado y el payload codificados en Base64.
+    - Una clave secreta.
+    - El algoritmo especificado (como `HS256` o `RS256`).
+- Ejemplo de cálculo:
+```json
+HMACSHA256(
+  base64UrlEncode(header) + "." + base64UrlEncode(payload),
+  secret
+)
+```
+
+Token completo (Ejemplo):
+```
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+```
+
+#### Advertencias importantes de seguridad
+1. No almacenar datos sensibles en el Payload:
+- Los datos del payload están codificados, no cifrados, por lo que cualquiera puede leerlos si tiene acceso al token.
+
+2. Usar HTTPS:
+- Asegúrate de que el token se transmita únicamente por conexiones seguras para evitar su intercepción.
+
+3. Clave secreta segura:
+- Utiliza claves secretas largas y complejas para algoritmos simétricos (como `HS256`) y protege las claves privadas en algoritmos asimétricos (como `RS256`).
+
+4. Establecer tiempos de expiración:
+- Usa el claim `exp` para que los tokens tengan un tiempo de vida limitado, reduciendo el riesgo de uso indebido en caso de filtración.
+
+5. Evitar el almacenamiento inseguro:
+- No guardes el token en `localStorage` si puedes evitarlo. Usa cookies seguras (`HttpOnly`, `Secure`, y `SameSite`) cuando sea posible.
+
+6. Revocar tokens comprometidos:
+- No puedes invalidar un JWT directamente. Implementa una lista de revocación o cambios en la clave secreta si es necesario.
+
+7. Verificar siempre la firma del JWT:
+- Nunca confíes en un JWT sin verificar su firma y validez en el servidor.
+
 ## PAQUETES DE NODE.JS
 [Node Package Manager](https://docs.npmjs.com)
 - [npm-init](https://docs.npmjs.com/cli/v9/commands/npm-init) Crea un archivo package.json para iniciar un proyecto Node.js y definir sus configuraciones básicas.
@@ -307,9 +394,9 @@ Este es un proyecto de código abierto. Consulte el repositorio oficial para obt
 - [dotenv](https://www.npmjs.com/package/dotenv) Permite cargar variables de entorno desde un archivo `.env` para mantener configuraciones seguras y organizadas.
 - [express-validator](https://www.npmjs.com/package/express-validator) Middleware para validar y sanitizar datos en aplicaciones construidas con Express.
 - [Mongoosejs](https://mongoosejs.com/) Proporciona una capa de abstracción para interactuar con MongoDB. Permite definir esquemas y modelos para estructurar y validar los datos de manera más sencilla. Además incluye funcionalidades avanzadas como middleware, validaciones y consultas más intuitivas.
-
 - [bcryptjs](https://www.npmjs.com/package/bcryptjs) es una biblioteca de JavaScript que permite cifrar contraseñas de forma segura utilizando el algoritmo bcrypt, proporcionando funciones para crear hashes de contraseñas y verificar si un texto coincide con un hash almacenado.
 
+- [jwt](https://jwt.io/): Herramienta en línea para decodificar, verificar y generar JSON Web Tokens (JWT), utilizados para autenticar y transmitir información de manera segura en aplicaciones web.
 
 ## BEST PRACTICES
 ### SOLID
@@ -721,6 +808,102 @@ useEffect(() => {
 
 
 ---
+## ⭐ 📅 🛢️ 386. Generar un Json Web Token
+[jwt](https://jwt.io/): Herramienta en línea para decodificar, verificar y generar JSON Web Tokens (JWT), utilizados para autenticar y transmitir información de manera segura en aplicaciones web.
+
+Instalamos jsonwebtoken:
+```
+npm i jsonwebtoken 
+```
+
+Creamos un helper `jwt.js` que nos devolverá el token si todo ha ido bien y un error en caso de no recibir correctamente la información:
+
+```javascript
+const jwt = require('jsonwebtoken');
+
+const generarJWT = ( uid, name ) => {
+    
+    return new Promise( (resolve, reject) => {
+        const payload = { uid, name };
+        jwt.sign( payload, process.env.SECRET_JWT_SEED, {
+            expiresIn: '2h',
+        }, (err, token) => {
+
+            if( err ) {
+                console.log(err);
+                reject('No se pudo generar el token');
+            }
+
+            resolve( token );
+
+        });
+    });
+
+}
+
+module.exports = {
+    generarJWT
+}
+```
+> INFO   
+> Para gestionar el token, usamos `Promise`. Una promesa es un objeto en JavaScript que representa el resultado de una operación asincrónica, que puede completarse con éxito (resolve) o fallar (reject).
+> 
+> resolve: Se llama cuando la operación se completa con éxito, proporcionando el valor esperado como resultado.   
+> reject: Se llama cuando la operación falla, proporcionando un motivo o error como resultado.
+
+En el controller importamos `generarJWT` y tanto en `loginUsuario` como en `crearUsuario` añadimos el "token":
+
+```diff
+const loginUsuario = async(req, res = response) => {
+    
+    const { email, password } = req.body;
+
+    try {
+        const usuario = await Usuario.findOne({ email }); 
+
+        if( !usuario ) {
+            return res.status(400).json({
+                ok: false,
+                msg: 'El usuario no existe con ese email'
+            });
+        }
+
+        // Confirmar los passwords
+        const validPassword = bcrypt.compareSync( password, usuario.password );
+
+        if( !validPassword ) {
+            return res.status(400).json({
+                ok: false,
+                msg: 'Password incorrecto'
+            });
+        }
+
++       // Generar nuestro JWT
++       const token = await generarJWT( usuario.id, usuario.name );
+
+        res.json({
+            ok: true,
+            uid: usuario.id,
+            name: usuario.name,
++           token
+        });
+
+        
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            ok: false,
+            msg: 'Por favor hable con el administrador'
+        });
+        
+    }
+}
+```
+
+
+
+
+---
 ## ⭐ 📅 🛢️ 385. Login de usuario
 
 Ahora en el controller tenemos que actualizar la función `loginUsuario` y desencriptar la contraseña para confirmar que es correcta:
@@ -944,7 +1127,7 @@ Añadimos a nuestro .env el link de conexión a la BBDD:
 PORT=4000
 +DB_CNN=mongodb+srv://[USUARIO]:[PASSWORD]@hectoralvaez.sgta2.mongodb.net/[NOMBRE_BBDD]
 ```
-> **¡Importante!** Añadir al final del link de conexión el nombre de la nueva BBDD `[NOMBRE_BBDD]`
+> **⚠️¡Importante!** Añadir al final del link de conexión el nombre de la nueva BBDD `[NOMBRE_BBDD]`
 
 Creamos nuestro archivo de configuración en la carpeta 'database':
 ```javascript
