@@ -397,6 +397,8 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4
 - [bcryptjs](https://www.npmjs.com/package/bcryptjs) es una biblioteca de JavaScript que permite cifrar contraseñas de forma segura utilizando el algoritmo bcrypt, proporcionando funciones para crear hashes de contraseñas y verificar si un texto coincide con un hash almacenado.
 
 - [jwt](https://jwt.io/): Herramienta en línea para decodificar, verificar y generar JSON Web Tokens (JWT), utilizados para autenticar y transmitir información de manera segura en aplicaciones web.
+- [cors](https://www.npmjs.com/package/cors)
+El paquete CORS en Node.js permite habilitar Cross-Origin Resource Sharing, una política que permite o restringe solicitudes HTTP desde diferentes orígenes en aplicaciones web. Es útil para manejar peticiones entre dominios, especialmente en APIs.
 
 ## BEST PRACTICES
 ### SOLID
@@ -808,7 +810,52 @@ useEffect(() => {
 
 
 ---
-## ⭐ 📅 🛢️ 386. 387. Revalidar JWT
+## 📅 🛢️ 388. Configurar CORS
+
+Instalamos CORS de Node Package Manager
+```
+npm install cors
+```
+
+
+Y se aplica la configuración por defecto de 'cors' en `index.js`
+
+```diff
+const express = require('express');
+require('dotenv').config();
++const cors = require('cors');
+const { dbConnection } = require('./database/config');
+
+// Crear el servidor de express
+const app = express();
+
+// Base de datos
+dbConnection();
+
++// CORS
++app.use( cors());
+
+// Directorio público
+app.use( express.static('public') );
+
+// Lectura y parseo del body
+app.use( express.json() );
+
+// Rutas
+app.use('/api/auth', require('./routes/auth') );
+
+// TODO: CRUD: Eventos // get, create, update, delete
+
+// Escuchar peticiones
+app.listen( process.env.PORT, () => {
+    console.log(`Servidor corriendo en puerto ${ process.env.PORT }`);
+});
+```
+
+
+
+---
+## ⭐ 📅 🛢️ 387. Revalidar JWT
 
 Los tokens no se pasan por el "Body", como hemos estado haciendo hasta ahora pasando la información del usuario en Postman, que en el Body añadíamos el JSON con la información necesaria:
 ```json
