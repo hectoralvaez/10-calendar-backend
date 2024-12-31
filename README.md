@@ -808,6 +808,16 @@ useEffect(() => {
 
 # 🏁 Sección 24: 📅 🛢️🚀⚛️🌳 + ✏️📖♻️🗑️ Backend - Eventos del calendario - CRUD
 
+## 📅 🌐 391. Temas puntuales de la sección
+
+### ¿Qué veremos en esta sección?
+
+- CRUD completo de eventos de calendario
+- Modelos
+- Validaciones automáticas
+- Validaciones personalizadas
+
+Aquí trabajaremos creando todo lo necesario para que podamos insertar, actualiza y eliminar información relacionada a los eventos que nuestra aplicación del calendario necesitará.
 
 
 # 🆕 Sección 24: 📅 🛢️🚀⚛️🌳 + ✏️📖♻️🗑️ Backend - Eventos del calendario - CRUD
