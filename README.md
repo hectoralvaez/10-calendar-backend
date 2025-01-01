@@ -809,6 +809,46 @@ useEffect(() => {
 # 🏁 Sección 24: 📅 🛢️🚀⚛️🌳 + ✏️📖♻️🗑️ Backend - Eventos del calendario - CRUD
 
 ---
+## 📅 🌐 394. Modelo Evento
+
+Añadimos el 'Schema' del modelo "Event"
+
+```javascript
+const { Schema, model } = require('mongoose');
+
+const EventSchema = Schema({
+    title: {
+        type: String,
+        required: true,
+    },
+    notes: {
+        type: String,
+    },
+    start: {
+        type: Date,
+        required: true,
+    },
+    end: {
+        type: Date,
+        required: true,
+    },
+    user: {
+        type: Schema.Types.ObjectId,
+        ref: 'Usuario',
+    }
+});
+
+module.exports = model('Event', EventSchema);
+```
+
+Es importante la parte de `user`, de tipo `Schema.Types.ObjectId` y referenciarlo al modelo creado anteriormente "Usuario"
+
+user: {
+    type: Schema.Types.ObjectId,
+    ref: 'Usuario',
+}
+
+---
 ## 📅 🌐 393. Resolución de la tarea - CRUD
 
 Todo OK, solo una pequeña mejora para optimizar el código.
@@ -1019,8 +1059,6 @@ const jwt = require('jsonwebtoken');
 const validarJWT = (req, res = response, next) => {
     // x-token headers 
     const token = req.header('x-token');
-
-    console.log(token);
 
     if( !token ) {
         return res.status(401).json({

@@ -3,6 +3,7 @@ const { response } = require('express');
 
 // CREATE
 const createEvent = (req, res = response) => {
+    console.log(req.body);
     
     res.json({
         ok: true,
