@@ -1,5 +1,5 @@
 /* 
-    Rutas de Eventos / Events
+    Rutas de Eventos
     host + /api/events
 */
 
@@ -10,16 +10,18 @@ const { validarJWT } = require('../middlewares/validar-jwt');
 const router = Router();
 
 // Todas tienen que pasar por la validación del middeware de JWT
+router.use(validarJWT);
+
 // CREATE
-router.post('/new', validarJWT, createEvent);
+router.post('/new', createEvent);
 
 // READ
-router.get('/', validarJWT, getEvents);
+router.get('/', getEvents);
 
 // UPDATE
-router.put('/update/:id', validarJWT, updateEvent);
+router.put('/update/:id', updateEvent);
 
 // DELTE
-router.delete('/delete/:id', validarJWT, deleteEvent);
+router.delete('/delete/:id', deleteEvent);
 
 module.exports = router;

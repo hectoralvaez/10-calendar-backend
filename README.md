@@ -809,6 +809,38 @@ useEffect(() => {
 # 🏁 Sección 24: 📅 🛢️🚀⚛️🌳 + ✏️📖♻️🗑️ Backend - Eventos del calendario - CRUD
 
 ---
+## 📅 🌐 393. Resolución de la tarea - CRUD
+
+Todo OK, solo una pequeña mejora para optimizar el código.
+
+Como todas las rutas tienen que hacer la validación del middeware de JWT, en vez de ponerlo en cada llamada de la ruta:
+
+```javascript
+router.post('/new', validarJWT, createEvent);
+```
+
+Se quita de la ruta y se pone por encima de todas las rutas que necesiten validar el token:
+
+```javascript
+router.use(validarJWT);
+```
+
+```diff
+// Todas tienen que pasar por la validación del middeware de JWT
++router.use(validarJWT);
+
+// CREATE
+-router.post('/new', validarJWT, createEvent);
++router.post('/new', createEvent);
+```
+
+> Si alguna ruta no tuviera que validar el token, se tiene que poner por encima del `router.use(validarJWT);`, 
+
+> NOTA IMPORTANTE:  
+> El token tiene que pasarse por el header con la variable `x-token`
+
+
+---
 ## 📅 🌐 392. Continuación del proyecto - Calendar Backend
 
 Esta clase es una tarea que consiste en crear las rutas que nos permitirán hacer el CRUD de los eventos.
