@@ -400,6 +400,8 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4
 - [cors](https://www.npmjs.com/package/cors)
 El paquete CORS en Node.js permite habilitar Cross-Origin Resource Sharing, una política que permite o restringe solicitudes HTTP desde diferentes orígenes en aplicaciones web. Es útil para manejar peticiones entre dominios, especialmente en APIs.
 
+- [moment](https://www.npmjs.com/package/moment): Biblioteca de JavaScript que facilita el manejo, manipulación y formateo de fechas y horas, ofreciendo herramientas para trabajar con zonas horarias, diferencias entre fechas y formatos personalizados
+
 ## BEST PRACTICES
 ### SOLID
 Trabajar con los principios SOLID significa diseñar software de manera que sea fácil de entender, mantener y extender, separando responsabilidades, favoreciendo la reutilización y evitando dependencias innecesarias.
@@ -807,6 +809,53 @@ useEffect(() => {
 <br />
 
 # 🏁 Sección 24: 📅 🛢️🚀⚛️🌳 + ✏️📖♻️🗑️ Backend - Eventos del calendario - CRUD
+
+---
+## 📅 🌐 395. Validar campos necesarios
+
+Es importante validar los campos antes de enviar la información a la base de datos para optimizar recursos y no dejar todo el trabajo al Backend.
+
+Instalamos `moment`
+```
+npm i moment
+```
+
+Creamos el "helper" `isDate.js` que nos ayuda a confirmar que el dato que recibimos es una fecha:
+
+```javascript
+const moment = require('moment');
+
+const isDate = ( value ) => {
+    if ( !value ) {
+        return false;
+    }
+
+    const fecha = moment( value );
+
+    if ( fecha.isValid() ) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+module.exports = { isDate };
+```
+
+En las rutas del evento, en la de crear evento, añadimos los middlewares que nos ayudan a confirmar que la información que vamos a enviar a la BBDD está completa:
+
+```javascript
+// CREATE
+router.post('/new',
+    [
+        check('title', 'El título es obligatorio').not().isEmpty(),
+        check('start', 'La fecha de inicio es obligatoria').custom( isDate),
+        check('end', 'La fecha de finalización es obligatoria').custom( isDate),
+        validarCampos,
+    ],
+    createEvent);
+```
+
 
 ---
 ## 📅 🌐 394. Modelo Evento
