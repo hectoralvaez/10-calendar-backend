@@ -808,6 +808,97 @@ useEffect(() => {
 
 # 🏁 Sección 24: 📅 🛢️🚀⚛️🌳 + ✏️📖♻️🗑️ Backend - Eventos del calendario - CRUD
 
+---
+## 📅 🌐 392. Continuación del proyecto - Calendar Backend
+
+Esta clase es una tarea que consiste en crear las rutas que nos permitirán hacer el CRUD de los eventos.
+
+Empezamos añadiendo una ruta nueva en `index.js`
+
+```javascript
+app.use('/api/events', require('./routes/events') );
+```
+
+En el controller de events creamos todas las acciones CRUD:
+
+```javascript
+const { response } = require('express');
+
+// CREATE
+const createEvent = (req, res = response) => {
+    
+    res.json({
+        ok: true,
+        msg: 'createEvent'
+    });
+}
+
+// READ
+const getEvents = (req, res = response) => {
+    
+    res.json({
+        ok: true,
+        msg: 'getEvents'
+    });
+}
+
+// UPDATE
+const updateEvent = (req, res = response) => {
+    
+    res.json({
+        ok: true,
+        msg: 'updateEvent'
+    });
+}
+
+// DELTE
+const deleteEvent = (req, res = response) => {
+    
+    res.json({
+        ok: true,
+        msg: 'deleteEvent'
+    });
+}
+
+module.exports = {
+    createEvent,
+    getEvents,
+    updateEvent,
+    deleteEvent
+}
+```
+
+Creamos las rutas de events:
+
+```javascript
+/* 
+    Rutas de Eventos / Events
+    host + /api/events
+*/
+
+const { Router } = require('express');
+const { getEvents, createEvent, updateEvent, deleteEvent } = require('../controllers/events');
+const { validarJWT } = require('../middlewares/validar-jwt');
+
+const router = Router();
+
+// Todas tienen que pasar por la validación del middeware de JWT
+// CREATE
+router.post('/new', validarJWT, createEvent);
+
+// READ
+router.get('/', validarJWT, getEvents);
+
+// UPDATE
+router.put('/update/:id', validarJWT, updateEvent);
+
+// DELTE
+router.delete('/delete/:id', validarJWT, deleteEvent);
+
+module.exports = router;
+```
+
+---
 ## 📅 🌐 391. Temas puntuales de la sección
 
 ### ¿Qué veremos en esta sección?
