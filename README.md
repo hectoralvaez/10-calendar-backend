@@ -811,7 +811,39 @@ useEffect(() => {
 # 🏁 Sección 24: 📅 🛢️🚀⚛️🌳 + ✏️📖♻️🗑️ Backend - Eventos del calendario - CRUD
 
 ---
-## 📅 🌐 396. Grabar el evento en la base de datos
+## ⭐⭐⭐ 📅 R 📖 🌐 397. Obtener el listado de los Eventos
+
+Mostramos el listado de eventos en la función `getEvents`
+
+```javascript
+// READ
+const getEvents = async(req, res = response) => {
+
+    const events = await Event.find().populate('user', 'name');
+
+    res.json({
+        ok: true,
+        msg: 'getEvents',
+        events
+    });
+}
+```
+
+`Event.find()` nos devuelve toda la información del evento más toda la información del usuario.
+
+Si solo nos interesa el nombre del usuario, tenemos que aplicar "populate"
+```
+Event.find().populate('user', 'name');
+```
+
+Si nos interesara además el password, por ejemplo, sería así:
+```
+Event.find().populate('user', 'name password');
+```
+
+
+---
+## ⭐⭐⭐ 📅 C ✏️ 🌐 396. Grabar el evento en la base de datos
 
 En el controller de events importamos el modelo 'Event' y ya podemos obtener la información para guardarla en la BBDD.
 
