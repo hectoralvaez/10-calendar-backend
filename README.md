@@ -811,6 +811,50 @@ useEffect(() => {
 # 🏁 Sección 24: 📅 🛢️🚀⚛️🌳 + ✏️📖♻️🗑️ Backend - Eventos del calendario - CRUD
 
 ---
+## 📅 🌐 396. Grabar el evento en la base de datos
+
+En el controller de events importamos el modelo 'Event' y ya podemos obtener la información para guardarla en la BBDD.
+
+```javascript
+const Event = require('../models/Event');
+
+// CREATE
+const createEvent = async(req, res = response) => {
+
+    const event = new Event( req.body );
+    
+    try {
+        event.user = req.uid;
+        const eventSaved = await event.save();
+        res.status(201).json({
+            ok: true,
+            msg: 'createEvent',
+            event: eventSaved,
+        });
+    }
+    catch (error) {
+        console.log(error);
+        res.status(500).json({
+            ok: false,
+            msg: 'Hable con el administrador'
+        });
+    }
+}
+```
+
+Además, en el modelo del evento, podemos hacer limpieza de lo que no necesitamos que nos envíe la respuesta del JSON y renombrar variables.
+
+Con esto, eliminamos `__v`, que no lo usamos y cambiamos `_id` por `id`:
+
+```javascript
+EventSchema.method('toJSON', function() {
+    const { __v, _id, ...object } = this.toObject();
+    object.id = _id;
+    return object;
+});
+```
+
+---
 ## 📅 🌐 395. Validar campos necesarios
 
 Es importante validar los campos antes de enviar la información a la base de datos para optimizar recursos y no dejar todo el trabajo al Backend.
