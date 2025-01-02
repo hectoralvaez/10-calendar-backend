@@ -805,10 +805,80 @@ useEffect(() => {
 }, [initialForm])
 ```
 
+### CONSOLA
+Para imprimir un objeto en consola usar:
+```
+console.dir(req.body, { depth: null });
+```
+
+Si usamos 
+```
+console.log(req.body);
+```
+
+Devuelve `[object Object]`
+
 
 <br />
 
 # 🏁 Sección 24: 📅 🛢️🚀⚛️🌳 + ✏️📖♻️🗑️ Backend - Eventos del calendario - CRUD
+
+---
+## ⭐⭐⭐ 📅 U 📖 🌐 398. Actualizar un Evento
+
+Editamos un evento en la función `updateEvent` addemás controlando que el usuario que lo edite sea el autor del evento.
+
+```javascript
+// UPDATE
+const updateEvent = async(req, res = response) => {
+
+    const eventId = req.params.id;
+    const uid = req.uid;
+
+    try {
+        const event = await Event.findById( eventId );
+
+        if( !event ) {
+            return res.status(404).json({
+                ok: false,
+                msg: 'Evento no existe por ese id'
+            });
+        }
+                
+        if( event.user.toString() !== uid ) {
+            return res.status(401).json({
+                ok: false,
+                msg: 'No tiene privilegio de editar este evento'
+            });
+        }
+
+        const newEvent = {
+            ...req.body,
+            user: uid
+        }
+
+        const eventUpdated = await Event.findByIdAndUpdate(
+            eventId,
+            newEvent,
+            { new: true }
+        );
+
+        res.json({
+            ok: true,
+            msg: 'updateEvent',
+            event: eventUpdated
+        });
+    }  
+    catch (error) {
+        console.log(error);
+        res.status(500).json({
+            ok: false,
+            msg: 'Hable con el administrador'
+        });
+    }
+}
+```
+
 
 ---
 ## ⭐⭐⭐ 📅 R 📖 🌐 397. Obtener el listado de los Eventos
