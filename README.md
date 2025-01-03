@@ -836,10 +836,23 @@ Devuelve `[object Object]`
 
 <br />
 
-# 🏁 Sección 25: 🚄 Despliegue del backend a la nube
+# 🏁 Sección 25: 📅 🚄 Despliegue del backend a la nube
 
 
-# 🆕 Sección 25: Despliegue del backend a la nube
+
+---
+## 📅 🚄 402. Temas puntuales de la sección
+
+Despleagar el backend en [railway](https://railway.com/)
+
+En esta clase, nos enfocaremos en desplegar nuestro backend a [Railway](https://railway.com), el cual es un servicio en la nube que nos permite desplegar fácilmente aplicaciones de Node.
+
+- Configuración de Railway
+- Subida a Github
+- Configuración de variables de entorno
+- Prueba del backend en la nube
+
+# 🆕 Sección 25: 📅 🚄 Despliegue del backend a la nube
 
 # 🏁 Sección 24: 📅 🛢️🚀⚛️🌳 + ✏️📖♻️🗑️ Backend - Eventos del calendario - CRUD
 
