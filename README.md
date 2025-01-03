@@ -839,6 +839,11 @@ Devuelve `[object Object]`
 # 🏁 Sección 25: 📅 🚄 Despliegue del backend a la nube
 
 ---
+## 📅 🚄 404. Pruebas antes de desplegar
+
+Pruebas OK
+
+---
 ## 📅 🚄 403. Subir proyecto a GitHub
 
 (Ya lo tenía subido)
