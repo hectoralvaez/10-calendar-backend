@@ -836,6 +836,7 @@ Devuelve `[object Object]`
 
 # 🏁 Sección 24: 📅 🛢️🚀⚛️🌳 + ✏️📖♻️🗑️ Backend - Eventos del calendario - CRUD
 
+
 ---
 ## ⭐⭐⭐ 📅 D 📖 🌐 399. Eliminar Eventos
 
