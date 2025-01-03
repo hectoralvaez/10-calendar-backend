@@ -1,3 +1,16 @@
+
+![React](https://img.shields.io/badge/React-61DAFB?style=flat-square&logo=react&logoColor=white)
+![Node.js](https://img.shields.io/badge/Node.js-339933?style=flat-square&logo=node.js&logoColor=white)
+![Express](https://img.shields.io/badge/Express-000000?style=flat-square&logo=express&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=flat-square&logo=mongodb&logoColor=white)
+![HTML](https://img.shields.io/badge/HTML-E34F26?style=flat-square&logo=html5&logoColor=white)
+![SASS](https://img.shields.io/badge/SASS-CC6699?style=flat-square&logo=sass&logoColor=white)
+![GitHub](https://img.shields.io/badge/GitHub-181717?style=flat-square&logo=github&logoColor=white)
+![Postman](https://img.shields.io/badge/Postman-FF6C37?style=flat-square&logo=postman&logoColor=white)
+![Jest](https://img.shields.io/badge/Jest-C21325?style=flat-square&logo=jest&logoColor=white)
+![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=flat-square&logo=firebase&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-646CFF?style=flat-square&logo=vite&logoColor=white)
+
 ### Emojis
 
 🆕 Inicio Sección
@@ -824,9 +837,56 @@ Devuelve `[object Object]`
 # 🏁 Sección 24: 📅 🛢️🚀⚛️🌳 + ✏️📖♻️🗑️ Backend - Eventos del calendario - CRUD
 
 ---
+## ⭐⭐⭐ 📅 D 📖 🌐 399. Eliminar Eventos
+
+Eliminamos un evento en la función `deleteEvent` además controlando que el usuario que lo elimine sea el autor del evento. Hemos aprobechado el código generado para `updateEvent` y se ha adaptado para eliminar evento.
+
+```javascript
+// DELTE
+const deleteEvent = async(req, res = response) => {
+    
+    const eventId = req.params.id;
+    const uid = req.uid;
+
+    try {
+        const event = await Event.findById( eventId );
+
+        if( !event ) {
+            return res.status(404).json({
+                ok: false,
+                msg: 'Evento no existe por ese id'
+            });
+        }
+                
+        if( event.user.toString() !== uid ) {
+            return res.status(401).json({
+                ok: false,
+                msg: 'No tiene privilegio para eliminar este evento'
+            });
+        }
+
+        await Event.findByIdAndDelete(eventId);
+
+        res.json({
+            ok: true,
+            msg: 'deleteEvent',
+        });
+    }  
+    catch (error) {
+        console.log(error);
+        res.status(500).json({
+            ok: false,
+            msg: 'Hable con el administrador'
+        });
+    }
+}
+```
+
+
+---
 ## ⭐⭐⭐ 📅 U 📖 🌐 398. Actualizar un Evento
 
-Editamos un evento en la función `updateEvent` addemás controlando que el usuario que lo edite sea el autor del evento.
+Editamos un evento en la función `updateEvent` además controlando que el usuario que lo edite sea el autor del evento.
 
 ```javascript
 // UPDATE
