@@ -837,6 +837,11 @@ Devuelve `[object Object]`
 <br />
 
 
+# 🏁 Sección 26: 📅 🌐 🛢️🚀⚛️🌳 MERN - Calendario + Backend
+
+
+# 🆕 Sección 26: 📅 🌐 🛢️🚀⚛️🌳 MERN - Calendario + Backend
+
 # 🏁 Sección 25: 📅 🚄 Despliegue del backend a la nube
 
 ---
