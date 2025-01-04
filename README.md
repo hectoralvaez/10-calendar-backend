@@ -839,6 +839,14 @@ Devuelve `[object Object]`
 
 # 🏁 Sección 26: 📅 🌐 🛢️🚀⚛️🌳 MERN - Calendario + Backend
 
+---
+## 📅 🌐 409. Continuación de proyecto - Calendar + Backend
+
+Arrancamos los proyectos de Front y Back
+
+En Front estamos usando yarn y en Back npm, no pasa nada, pero sería  recomendable unificar gestor de paquetes.
+
+---
 ## 📅 🌐 408. Temas puntuales de la sección
 
 ### ¿Qué veremos en esta sección?
