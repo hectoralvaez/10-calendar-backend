@@ -11,6 +11,8 @@ const app = express();
 // Base de datos
 dbConnection();
 
+fetch('https://ifconfig.me').then(res => res.text()).then(console.log);
+
 // CORS
 app.use( cors());
 
