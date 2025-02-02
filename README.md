@@ -48,6 +48,8 @@
 ⚛️ React
 🌳 Node.js
 
+🚄 Railway
+
 🏁 Fin Sección 
 ### URLS DEL PROYECTO:  
 
@@ -303,8 +305,21 @@ Este es un proyecto de código abierto. Consulte el repositorio oficial para obt
 - [Mongoosejs](https://mongoosejs.com/) Biblioteca de Node.js que proporciona una capa de abstracción para interactuar con MongoDB. Permite definir esquemas y modelos para estructurar y validar los datos de manera más sencilla, ofreciendo una forma más organizada y amigable de trabajar con MongoDB en aplicaciones JavaScript. Además, Mongoose incluye funcionalidades avanzadas como middleware, validaciones y consultas más intuitivas.
 
 ## PETICIONES HTTP 
-- [Fetch](https://developer.mozilla.org/es/docs/Web/API/Fetch_API/Using_Fetch) Viene en JavaScript
-- [Axios](https://axios-http.com) Fernando lo prefiere a Fetch
+### [Fetch](https://developer.mozilla.org/es/docs/Web/API/Fetch_API/Using_Fetch) (Viene en JavaScript)
+- *Nativo:* Disponible en los navegadores modernos sin necesidad de instalación.
+- *Promesas:* Devuelve promesas, pero no maneja errores HTTP automáticamente.
+- *Configuración:* Requiere configuración manual para cosas como interceptores o serialización.
+- *Compatibilidad:* Puede requerir polyfills en navegadores antiguos.
+
+
+### [Axios](https://axios-http.com) (Fernando lo prefiere a Fetch)
+- *Biblioteca externa:* Necesita instalación (npm install axios).
+- *Manejo automático de errores:* Detecta errores HTTP (status >= 400).
+- *Características avanzadas:* Interceptores, cancelación de solicitudes, transformación de datos automática.
+- *Compatibilidad:* Funciona bien tanto en Node.js como en navegadores.
+
+Conclusión: Usa Fetch si necesitas algo básico y ligero. Usa Axios para tareas más complejas o si buscas comodidad adicional.
+
 
 ## HTTP STATUS CODES
 - [HTTP Status Codes](https://www.restapitutorial.com/httpstatuscodes) Códigos de tres dígitos que los servidores web envían al navegador o cliente para informar sobre el resultado de una solicitud. Cada código tiene un significado específico y pertenece a una de las siguientes categorías:
@@ -836,8 +851,898 @@ Devuelve `[object Object]`
 
 <br />
 
+# 🏁 Sección 28: 📅 🚄 🛢️🚀⚛️🌳 Sección 28: Fin el MERN - Desplegarlo a producción
+
+---
+
+
+## 📅 🚄 435. Temas puntuales de la sección
+
+En esta sección vamos a trabajar desplegando nuevamente nuestro backend, pero esta vez incluiremos nuestro frontend hecho en React.
+
+### ¿Qué veremos en esta sección?
+- Build de producción
+- Desplegar cambios a Railway
+- Variables de entorno en React
+- Manejo de todas las rutas desde el backend
+
+# 🆕 Sección 28: 📅 🚄 🛢️🚀⚛️🌳 Sección 28: Fin el MERN - Desplegarlo a producción
+
+<br />
+
+# 🏁 Sección 27: 📅 🌐 🛢️🚀⚛️🌳 MERN CRUD - Eventos del calendario
+
+EXTRA:   
+En nuestro componente `CalendarModal`, para mostrar el título del evento en caso de que exista:
+
+```diff
+-<h1>Nuevo evento</h1>
++<h1>{formValues.title || "Nuevo evento"}</h1>
+```
+
+
+---
+
+## 📅 🌐 432. Limpiar información del calendario
+
+En nuestro store, en `calendarSlice`, añadimos el reducer `onLogoutCalendar`
+```javascript
+onLogoutCalendar: (state) => {
+    state.isLoadingEvents = true;
+    state.events = [];
+    state.activeEvent = null;
+}
+```
+
+Donde dejamos toda la información de los eventos en el estado inicial.   
+
+Es importante que sea `onLogoutCalendar` ya que estamos usando `onLogout` para vaciar la información de los datos de usuario en nuestro store `authSlice`.
+
+Una vez creado, se pasa al hook `useAuthStore` en `startLogout`.
+
+```diff
+const startLogout = () => {
+    localStorage.clear();
++   dispatch( onLogoutCalendar() );
+    dispatch( onLogout() );
+}
+```
+
+Limpiamos el localStorage y limpiamos los datos del evento y del usuario.
+
+
+---
+
+## 📅 🌐 431. Eliminar un evento
+
+En nuestro hook `useCalendarStore.js`, completamos la función `startDeletingEvent`
+
+> ❗IMPORTANTE   
+> Aquí usamos el `activeEvent`, que lo activamos mediante el "click", no con el "doubleClick", que activamos el evento para editarlo en el popup.
+
+```javascript
+const startDeletingEvent = async() => {
+    try {
+        // Eliminar el evento
+        await calendarApi.delete(`/events/delete/${ activeEvent.id }`);
+        dispatch( onDeleteEvent() );
+    } catch (error) {
+        console.log(error);
+        Swal.fire('Error al eliminar el evento', error.response.data?.msg, 'error');
+    }
+}
+```
+
+---
+
+## 📅 🌐 430. Cambiar el color de los eventos según usuario
+
+En nuestro `CalendarPage.jsx` añadimos una variable que nos dice si el envento es nuestro o no de manera que le pueda cambiar el color en "style".
+
+```diff
+const eventStyleGetter = ( event, start, end, isSelected ) => {
++   const isMyEvent = ( user.uid === event.user._id) || ( user.uid === event.user.uid );
+
+    const  style = {
+-       backgroundColor: isMyEvent,
++       backgroundColor: isMyEvent ? '#0095ff' : '#465660',
+        borderRadius: '0px',
+        opacity: 0.8,
+        color: '#fff'
+    }
+
+    return { style }
+}
+```
+
+Como el backend nos devuelve el id del usuario con "event.user._id" y en el front estamos devolviendo "event.user.uid", tenemos que comprobar que nuestro "user.uid" sea igual a alguno de los dos:
+
+```javascript
+const isMyEvent = ( user.uid === event.user._id) || ( user.uid === event.user.uid );
+```
+
+
+
+---
+
+## 📅 🌐 429. Actualizar el evento
+
+En nuestro hook `useCalendarStore.js`, completamos la función `startSavingEvent`
+
+En esta clase cambiamos las referencias al id de "_id" a "id", ya que ahora haremos referencia a nuestos propios "id".
+
+Funcionando OK:
+
+```javascript
+const startSavingEvent = async( calendarEvent ) => {
+
+    if( calendarEvent.id ){
+        // Actualizamos el evento
+        const { data } = await calendarApi.put(`/events/update/${ calendarEvent.id }`, calendarEvent );
+        dispatch( onUpdateEvent( { ...calendarEvent, user } ) );
+    } else {
+        // Agregamos un nuevo evento
+        const { data } = await calendarApi.post('/events/new', calendarEvent );
+
+        dispatch( onAddNewEvent({ 
+            ...calendarEvent, 
+            id: data.event.id,
+            user
+        }) );
+    }
+}
+```
+
+Optimización:
+
+```diff
+const startSavingEvent = async( calendarEvent ) => {
+
+    if( calendarEvent.id ){
+        // Actualizamos el evento
++       // Como no vamos a usar la data, podemos liberar ese espacio de memoria ya que no vamos a trabajar con él
+-       const { data } = await calendarApi.put(`/events/update/${ calendarEvent.id }`, calendarEvent );
++       await calendarApi.put(`/events/update/${ calendarEvent.id }`, calendarEvent );
+        dispatch( onUpdateEvent( { ...calendarEvent, user } ) );
+
++       // Si aplicamos aquí el "return", nos ahorramos el siguiente "else"
+
++       return;
+
+-   } else {
+        // Agregamos un nuevo evento
+        const { data } = await calendarApi.post('/events/new', calendarEvent );
+
+        dispatch( onAddNewEvent({ 
+            ...calendarEvent, 
+            id: data.event.id,
+            user
+        }) );
+-   }
+}
+```
+
+Además, añadimos un try/catch para captura el error, quedando la función así:
+```javascript
+const startSavingEvent = async( calendarEvent ) => {
+    try {
+        if( calendarEvent.id ){
+            // Actualizamos el evento
+            await calendarApi.put(`/events/update/${ calendarEvent.id }`, calendarEvent );
+            dispatch( onUpdateEvent( { ...calendarEvent, user } ) );
+            return;
+        }
+        // Agregamos un nuevo evento
+        const { data } = await calendarApi.post('/events/new', calendarEvent );
+
+        dispatch( onAddNewEvent({ 
+            ...calendarEvent, 
+            id: data.event.id,
+            user
+        }) );                
+    } catch (error) {
+        console.log(error);
+        Swal.fire('Error al guardar el evento', error.response.data?.msg, 'error');
+    }
+}
+```
+
+---
+
+## 📅 🌐 428. Cargar los eventos al store
+
+En nuestro store `calendarSlice` ya no necesitamos el `tempEvent`:
+
+```javascript
+const tempEvent = {
+  _id: new Date().getTime(), // Este ID lo recibiremos del backend
+  title: 'Cumpleaños',
+  notes: 'Comprar pastel',
+  start: new Date(),
+  end: addHours( new Date(), 2),
+  bgColor: '#fafafa',
+  user: {
+    _id: '1',
+    name: 'Héctor'
+  }
+}
+```
+
+Que era el que cargábamos en el `initialState`:
+```javascript
+initialState: {
+    events: [
+        tempEvent
+    ],
+    activeEvent: null
+},
+```
+
+Ahora podemos cargar los eventos con `onLoadEvents`. Recorremos todo el array con los eventos que recibimos en el payload y si no existe, lo añadimos con un `push` a los events del `state`.
+
+```javascript
+onLoadEvents: (state, { payload = [] }) => {
+    state.isLoadingEvents = false;
+    // state.events = payload;
+
+    payload.forEach( event => {
+        const exist = state.events.some( dbEvent => dbEvent.id === event.id );
+        if ( !exist ) {
+            state.events.push( event );
+        }
+    });
+}
+```
+
+Ahora solo queda hacer el dispatch del `onLoadEvents` dentro de nuestro hook `startLodingEvents` para que los muestre en el calendario de nuestra aplicación.
+
+```diff
+const startLodingEvents = async() => {
+    try {
+        const { data } = await calendarApi.get('/events');
+        const events = convertEventsToDateEvents( data.events );
++       dispatch( onLoadEvents( events ) );
+
+    } catch (error) {
+        console.log('Error cargando eventos');
+        console.log(error);
+    }
+}
+```
+
+---
+
+## 📅 🌐 427. Mostrar eventos de la base de datos
+
+Creamos un helper que nos ayudará a convertir la fecha del evento en un formato más amigable con `parseISO` de `date-fns`.
+
+Recorremos todos los eventos con `events.map` y reemplazamos las fechas por la fecha modificada:
+
+```javascript
+import { parseISO } from "date-fns";
+
+export const convertEventsToDateEvents = ( events = [] ) => {
+
+    return events.map( event => {
+
+        event.start = parseISO( event.start );
+        event.end = parseISO( event.end );
+
+        return event;
+    });
+
+}
+```
+
+En el hook `useCalendarStore` añadimos el `startLodingEvents`
+
+Aquí obtenemos el listado de los eventos con 
+```javascript
+const { data } = await calendarApi.get('/events');
+```
+
+Y a continuación aplicamos el helper `convertEventsToDateEvents`
+```javascript
+const events = convertEventsToDateEvents( data.events );
+```
+
+Así queda `startLodingEvents`:
+
+```javascript
+const startLodingEvents = async() => {
+    try {
+        const { data } = await calendarApi.get('/events');
+        const events = convertEventsToDateEvents( data.events );
+        console.log(events)
+
+    } catch (error) {
+        console.log('Error cargando eventos');
+        console.log(error);
+    }
+}
+```
+
+---
+
+## 📅 🌐 426. Creando un nuevo Evento en el calendario
+
+En `useCalendarStore` en la función `startSavingEvent` aplicamos los cambios para guardar el evento en la bbdd (siempre que no tengamos el id del evento, que en ese caso lo que estaríamos haciendo es actualizarlo, lo haremos más adelante).
+
+Aplicamos el `id` de la `data` que nos genera la bbdd que obtenemos mediante:
+```javascript
+const { data } = await calendarApi.post('/events/new', calendarEvent );
+```
+
+Quitamos le id que usábamos con el timestamp por el que genera la bbdd
+```diff
+-_id: new Date().getTime() // Este ID lo recibiremos del backend
++id: data.event.id,
+```
+Y añadimos la información del usuario `user`.
+
+```diff
+const startSavingEvent = async( calendarEvent ) => {
+    // TODO: Update event
+    if( calendarEvent._id ){
+        // Actualizamos el evento
+        dispatch( onUpdateEvent( { ...calendarEvent } ) );
+    } else {
+        // Agregamos un nuevo evento
++        const { data } = await calendarApi.post('/events/new', calendarEvent );
+
+        dispatch( onAddNewEvent({ 
+            ...calendarEvent, 
+-           _id: new Date().getTime() // Este ID lo recibiremos del backend
++           id: data.event.id,
++           user
+        }) );
+    }
+}
+```
+
+
+
+---
+
+## 📅 🌐 425. Continuación de proyecto - Calendar CRUD de Eventos
+
+Arrancamos el back "10-calendar-backend"
+```
+npm run dev
+```
+
+
+### Recordatorio:
+
+- En la producción de Back no usaremos "nodemon", se usará "npm start"
+
+```
+"scripts": {
+    "dev": "nodemon index.js",
+    "start": "node index.js"
+},
+```
+
+- Importante, las variables de entorno que se ignoren. Las variables de entorno estarán en el hosting donde despleguemos el backend
+
+
+
+Arrancamos el front:
+```
+yarn dev
+```
+
+---
+
+## 📅 🌐 424. Temas puntuales de la sección
+
+### ¿Qué veremos en esta sección?
+- Eventos del calendario + backend
+
+Toda esta sección está enfocada en hacer persistentes nuestros cambios y eventos del calendario utilizando nuestro backend, disparando acciones asíncronas que terminan ejecutando las acciones síncronas que habíamos definido anteriormente.
+
+
+
+
+# 🆕 Sección 27: 📅 🌐 🛢️🚀⚛️🌳 MERN CRUD - Eventos del calendario
 
 # 🏁 Sección 26: 📅 🌐 🛢️🚀⚛️🌳 MERN - Calendario + Backend
+
+---
+## 📅 🌐 421. Logout y nombre de usuario
+
+En nuestro `useAuthStore` creamos la función`startLogout`, (aunque no es asíncrona, mantenemos la nomenclatura del resto de funciones, con "start").
+
+```javascript
+const startLogout = () => {
+    localStorage.clear();
+    dispatch( onLogout() );
+}
+```
+
+En el component `NavBar` importamos el hook `useAuthStore` para poder extraer el nombre del usuario y la función `startLogout` para cuando hagamos click en "Salir".
+
+```diff
++import { useAuthStore } from "../../hooks";
+
+export const NavBar = () => {
+
++ const { startLogout, user} = useAuthStore();
+
+  return (
+    <div className="navbar navbar-dark bg-dark mb-4 px-4">
+        <span className="navbar-brand">
+            <i className="fas fa-calendar-alt"></i>
+            &nbsp;
++           { user.name }
+        </span>
+
+        <button 
+          className="btn btn-outline-danger"
++         onClick={ startLogout }>
+            <i className="fas fa-sign-out-alt"></i>
+            &nbsp;
+            <span>Salir</span>
+        </button>
+    </div>
+  )
+}
+```
+
+---
+## 📅 🌐 420. Cambiar el URL después de una autenticación
+
+En `AppRouter`, redirigimos siempre que esté logado a la raiz y si no lo está al login:
+
+```javascript
+<Routes>
+    {
+        (status === 'not-authenticated')
+        ? (
+            <>
+            <Route path="/auth/*" element={ <LoginPage /> } />
+            <Route path="/*" element={ <Navigate to="/auth/login" /> } />
+            </>
+        )
+        : (
+            <>
+            <Route path="/" element={ <CalendarPage /> } />
+            <Route path="/*" element={ <Navigate to="/" /> } />
+            </>
+        )
+    }
+</Routes>
+```
+
+---
+## 📅 🌐 419. Mantener el estado de la autenticación
+
+En `calendarApi`, añadimos el primer intereceptor en el que gestionaremos el "token" que tenemos en el header:
+
+```javascript
+calendarApi.interceptors.request.use( config => {
+
+    config.headers = {
+        ...config.headers,
+        'x-token': localStorage.getItem('token')
+    }
+
+    return config;
+});
+```
+
+
+En el hook `useAuthStore` añadimos el `checkAuthToken`.
+
+```javascript
+const checkAuthToken = async() => {
+    const token = localStorage.getItem('token');
+    if ( !token ) return dispatch( onLogout('Ha expirado el token, vuelve a logarte.') );
+
+    try {
+        const { data } = await calendarApi.get('/auth/renew');
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('token-init-date', new Date().getTime() );
+        dispatch( onLogin({ name: data.name, uid: data.uid }) );
+    } catch (error) {
+        localStorage.clear();
+        dispatch( onLogout('Ha expirado el token, vuelve a logarte.') );
+    }
+}
+```
+
+
+Para acabar, en `AppRouter` controlamos que el token esté activo para acceder a `CalendarPage` o dejarlo en la `LoginPage`.
+
+
+```javascript
+export const AppRouter = () => {
+
+  const { status, checkAuthToken } = useAuthStore();
+
+  useEffect(() => {
+    checkAuthToken();
+  }, [])
+
+  if ( status === 'checking' ) {
+    return (
+      <h3>Cargando...</h3>
+    )
+  }
+
+  return (
+    <Routes>
+        {
+          (status === 'not-authenticated')
+            ? <Route path="/auth/*" element={ <LoginPage /> } />
+            : <Route path="/*" element={ <CalendarPage /> } />
+        }
+        {/* A esta ruta en principio no tendría que llegar ningún usuario, pero es un "Fail-Safe", una ruta a prueba de fallos */}
+        <Route path="/*" element={ <Navigate to="/auth/login" /> } />
+    </Routes>
+  )
+}
+```
+
+
+---
+## 📅 🌐 418. Creación de un nuevo usuario
+
+### TAREA:
+
+Añadir `startRegister`.
+
+
+Solución:
+
+Estaba todo ok, lo único que no hacía falta trabajar era con `password2`, ya que antes de pasar al `startRegister`, en el mismo `registerSubmit` ya se hace la comporbación de que sean iguales los passwords y de no ser iguales, lanza el mensaje de error y el return que impide llegar a la función `startRegister`.
+
+`registerSubmit` en `LoginPage`:
+
+```javascript
+const registerSubmit = ( event ) => {
+    event.preventDefault();
+    if ( registerPassword !== registerPassword2 ) {
+        Swal.fire('Error en el registro', 'Las contraseñas deben de ser iguales', 'error');
+        return; 
+    }
+    startRegister({ name: registerName, email: registerEmail, password: registerPassword });
+}   
+```
+
+
+`startRegister` en `useAuthStore`:
+
+```javascript
+const startRegister = async({ name, email, password }) => {
+    dispatch( onChecking() );
+    try {
+        const { data } = await calendarApi.post('/auth/new', { name, email, password });
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('token-init-date', new Date().getTime() );
+        dispatch( onLogin({ name: data.name, uid: data.uid }) );
+
+    } catch (error) {
+        dispatch( onLogout( error.response.data?.msg || '--' ) );
+        setTimeout(() => {
+            dispatch( clearErrorMessages() );
+        }, 10);  
+    }
+}
+```
+
+
+
+---
+## 📅 🌐 417. Mostrar error en la autenticación
+
+Para mostrar el error antes de lmipiar el mensaje, disparamos con `Swal` (`sweetalert2`) el mensaje de error:
+
+```javascript
+    useEffect(() => {
+      if ( errorMessage !== undefined ) {
+        Swal.fire('Error en la autenticación', errorMessage, 'error');
+      }
+    }, [errorMessage])
+```
+
+
+---
+## 📅 🌐 416. Despachar acciones respectivas
+
+Dentro de nuestro hook `useAuthStore`, en la función `startLogin`, aplicamos los dispatch de cada uno de los reducers de nuestro store `authSlice`.
+
+También añadimos al local storage un par de variables: `token` y `token-init-date`, que podríamos utilizar para calcular el tiempo que le queda al usuario por ejemplo de validez del toke.
+
+```javascript
+const startLogin = async({ email, password }) => {
+    console.log({ email, password });
+    dispatch( onChecking() );
+    try {
+        const { data } = await calendarApi.post('/auth', { email, password });
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('token-init-date', new Date().getTime() );
+        dispatch( onLogin({ name: data.name, uid: data.uid }) );
+
+    } catch (error) {
+        dispatch( onLogout('Credenciales incorrectas') );
+        setTimeout(() => {
+            dispatch( clearErrorMessages() );
+        }, 10);  
+    }
+}
+```
+
+También añadimos en nuestro store `authSlice` dos reducers nuevos:
+
+```javascript
+onLogout: (state, { payload }) => {
+    state.status = 'not-authenticated';
+    state.user = {};
+    state.errorMessage = payload;
+},
+clearErrorMessages: (state) => {
+    state.errorMessage = undefined;
+}
+```
+
+
+---
+## 📅 🌐 415. Realizar login de usuario
+
+En este caso vamos a trabajar sin Thunks ni Redux.
+
+Hacemos nuestro propio hook para controlar el estado del usuario, si está logeado o no.
+
+En la carpeta 'hooks', creamos `useAuthStore.js`:
+
+```javascript
+import { useDispatch, useSelector } from "react-redux"
+import { calendarApi } from "../api";
+
+export const useAuthStore = () => {
+    const { status, user, errorMessage } = useSelector( state => state.auth );
+    const dispatch = useDispatch();
+
+    const startLogin = async({ email, password }) => {
+        console.log({ email, password });
+        try {
+            const resp = await calendarApi.post('/auth', { email, password });
+            console.log({ resp });
+        } catch (error) {
+            console.log({ error });
+        }
+    }
+
+    return {
+        // Propiedades
+        status,
+        user,
+        errorMessage,
+
+        // Métodos
+        startLogin,
+    }
+}
+```
+
+En nuestra página de `LoginPage.jsx` importamos `useAuthStore` y desestructuramos `startLogin`:
+
+```javascript
+const { startLogin } = useAuthStore();
+```
+
+Para a continuación, en la función `loginSubmit` llamar `startLogin`:
+
+```javascript
+const loginSubmit = ( event ) => {
+    event.preventDefault();
+    startLogin({ email: loginEmail, password: loginPassword });
+}   
+```
+
+---
+## 📅 🌐 414. Axios - Configurar cliente para peticiones HTTP
+
+Vamos a usar Axios y no Fetch API ya que maneja mejor los interceptores de las peticiones.
+
+Instalamos axios
+```
+yarn add axios
+```
+
+Creamos `calendarApi.js` en la carpeta "api" con la variable d e entorno `VITE_API_URL`.
+
+```javascript
+import axios from 'axios';
+import { getEnvVariables } from '../helpers';
+
+const { VITE_API_URL } = getEnvVariables()
+
+const calendarApi = axios.create({
+    baseURL: 'VITE_API_URL'
+})
+
+// TODO: Configurar interceptores
+
+export default calendarApi;
+```
+
+Actualmente en este proyecto solo tenemos esta api, si hubieran otras, se tendrían que crear archivos para cada uno de los servidores que nos sirvan Endopints.
+
+---
+## 📅 🌐 413. useForm - Login y Registro
+
+Importamos el `useForm` de nuestro repositorio de hooks:
+[useForm](https://github.com/hectoralvaez/custom-hooks/blob/main/useForm/useForm.js)
+
+En nuestra página de login, importamos el hook:
+```javascript
+import { useForm } from "../../hooks";
+```
+
+Definimos el estado inicial de los dos formularios:
+
+```javascript
+const loginFormFields = {
+    loginEmail: '',
+    loginPassword: '',
+}
+
+const registerFormFields = {
+    registerName: '',
+    registerEmail: '',
+    registerPassword: '',
+    registerPassword2: '',
+}
+```
+
+Dentro de `LoginPage`, iniciamos nuestro hook `useForm` para los dos formularios:
+```javascript
+const { loginEmail, loginPassword, onInputChange: onLoginInputChange } = useForm(loginFormFields);
+const { registerName, registerEmail, registerPassword, registerPassword2, onInputChange: onRegisterInputChange } = useForm(registerFormFields);
+```
+
+Dentro de `LoginPage`, iniciamos el evento de cada formulario:
+
+```javascript
+const loginSubmit = ( event ) => {
+    event.preventDefault();
+    console.log({ loginEmail, loginPassword });
+}   
+
+const registerSubmit = ( event ) => {
+    event.preventDefault();
+    console.log({ registerName, registerEmail, registerPassword, registerPassword2 });
+}   
+```
+
+Ahora a cada formulario le añadimos el `onSubmit` de los eventos generados:
+```javascript
+<form onSubmit={ loginSubmit }>
+...
+</form>
+
+<form onSubmit={ registerSubmit }>
+...
+</form>
+```
+
+En cada input le añadimos el `name`, `value` y `onChange`
+```diff
+<input
+    type="text"
+    className="form-control"
+    placeholder="Nombre"
++   name="registerName"
++   value={ registerName }
++   onChange={ onRegisterInputChange }
+/>
+```
+
+---
+## 📅 🌐 411. AuthSlice
+
+Dentro del 'store', en la carpeta 'auth' creamos nuestro `authSlice` con `createSlice` de Redux Toolkit.
+
+```javascript
+import { createSlice } from '@reduxjs/toolkit';
+
+export const authSlice = createSlice({
+    name: 'auth',
+    initialState: {
+        status: 'checking', // checking | authenticated | not-authenticated
+        user: {},
+        errorMessage: undefined,
+    },
+    reducers: {
+        onChecking: (state, /* action */ ) => {
+            state.status = 'checking';
+            state.user = {};
+            state.errorMessage = undefined;
+        },
+        onLogin: (state, { payload }) => {
+            state.status = 'authenticated';
+            state.user = payload;
+            state.errorMessage = undefined;
+        },
+    }
+});
+
+
+// Action creators are generated for each case reducer function
+export const { onChecking, onLogin } = authSlice.actions;
+```
+Y lo añadimos a nuestro `store.js`
+
+```diff
+import { configureStore } from "@reduxjs/toolkit";
+-import { calendarSlice, uiSlice } from "./";
++import { authSlice, calendarSlice, uiSlice } from "./";
+
+
+export const store = configureStore({
+    reducer: {
++       auth: authSlice.reducer,
+        calendar: calendarSlice.reducer,
+        ui: uiSlice.reducer
+    },
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware({
+        serializableCheck: false
+    })
+});
+```
+
+
+
+
+---
+## 📅 🌐 410. Creando variables de entorno
+
+Creamos un helper que nos devolverá las variables de entorno:
+```javascript
+export const getEnvVariables = () => {
+
+    import.meta.env;
+
+    return {
+        ...import.meta.env
+    }
+};
+```
+
+Creamos nuestro archivo de variables de entorno `.env` y añadimos `VITE_API_URL`:
+
+```
+VITE_API_URL=https://localhost:4000/api
+```
+> IMPORTANTE:   
+> Estas variables de entorno tienen que empezar por "VITE_" para que las detecte y las pase a la parte de Front.
+
+Cuando imprimimos en cosola las variables:
+
+```javascript
+  console.log(getEnvVariables());
+```
+
+Nos imprime este objeto:
+```json
+{
+    BASE_URL: "/"
+    DEV: true
+    MODE: "development"
+    PROD: false
+    SSR: false
+    VITE_API_URL: "https://localhost:4000/api"
+}
+```
+
+> RECORDATORIO:   
+> No subir al repo las variables de entorno `.env` , se añade al `.gitignore` para evitar que se suba. 
+>
+> En su lugar, creamos un `.env.template` que no sirve de referencia pero sin poner datos comprometedores como conexión a BBDD.
+>
+> A partir de ese archivo cada desarrollador podrá crear su propio `.env` en local.
 
 ---
 ## 📅 🌐 409. Continuación de proyecto - Calendar + Backend
