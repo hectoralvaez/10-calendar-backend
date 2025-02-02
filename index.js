@@ -11,7 +11,10 @@ const app = express();
 // Base de datos
 dbConnection();
 
-fetch('https://ifconfig.me').then(res => res.text()).then(console.log);
+fetch("https://api64.ipify.org?format=text")
+  .then((res) => res.text())
+  .then((ip) => console.log("IP del proyecto:", ip))
+  .catch((err) => console.error("Error obteniendo la IP:", err));
 
 // CORS
 app.use( cors());
